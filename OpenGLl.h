@@ -1,15 +1,15 @@
-#include <gL/glut.h>
+#include <GL/glut.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
-#include <GL/glaux.h>
+//#include <GL/glaux.h>
 
 /*
 Here is pictures to create textures
 */
-AUX_RGBImageRec* photo_image, *photo_body,
-				*photo_legs,  *skin;
+//AUX_RGBImageRec* photo_image, *photo_body,
+//				*photo_legs,  *skin;
 
 /*
 Define of humanoid body properties 

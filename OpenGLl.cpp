@@ -1,5 +1,6 @@
 ﻿//================================Humanoid Robot====================================
-#include "OpenGLl.h";
+#include "OpenGLl.h"
+
 void timer_walk(int);
 void timer_kick(int);
 
@@ -564,11 +565,10 @@ void myInit()
         glEnable(GL_DEPTH_TEST); 
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		photo_body = auxDIBImageLoadA("body.bmp");
+/*		photo_body = auxDIBImageLoadA("body.bmp");
 		photo_image = auxDIBImageLoadA("photom.bmp");
 		photo_legs = auxDIBImageLoadA("shorts.bmp");
 		skin = auxDIBImageLoadA("skin.bmp");
-		
 		glGenTextures(1, &texture2);
 		glGenTextures(1, &texture1);
 		glGenTextures(1, &texture3);
@@ -617,7 +617,7 @@ void myInit()
 					skin->sizeY,
 					GL_RGB, GL_UNSIGNED_BYTE,
 					skin->data);
-
+*/
 /* allocate quadrics with filled drawing style */
         h=gluNewQuadric();
 		glEnable(GL_DEPTH_TEST);
@@ -688,7 +688,7 @@ void myInit()
         gluQuadricDrawStyle(rll, GLU_FILL);
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -709,4 +709,5 @@ void main(int argc, char **argv)
 	glutKeyboardFunc(keyboard);
 	redisplay_all();
     glutMainLoop();
+    return 0;
 }
