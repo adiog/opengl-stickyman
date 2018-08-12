@@ -5,30 +5,30 @@ void timer_walk(int);
 void timer_kick(int);
 
 //--------------------------------draw body functions-------------------------------
-void head()
+void drawHead()
 {
     glPushMatrix();
     glColor3f(1.0, 0.0, 5.0);
     glRotatef(-90.0, 1.0, 0.0, 0.0);
     glRotatef(15.0, 0.0, 0.0, 1.0);
     glScalef(HEAD_HEIGHT, HEAD_HEIGHT, HEAD_RADIUS);
-    gluSphere(h, 1.0, 10, 10);
+    gluSphere(head, 1.0, 10, 10);
     glPopMatrix();
 }
 
-void neck()
+void drawNeck()
 {
     glPushMatrix();
     glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(n, NECK_RADIUS, NECK_RADIUS, NECK_HEIGHT, 10, 10);
+    gluCylinder(neck, NECK_RADIUS, NECK_RADIUS, NECK_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
-void torso()
+void drawTorso()
 {
     glPushMatrix();
     glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(t, TORSO_RADIUS, TORSO_RADIUS, TORSO_HEIGHT, 10, 10);
+    gluCylinder(torso, TORSO_RADIUS, TORSO_RADIUS, TORSO_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -36,14 +36,14 @@ void joint_point()
 {
     glPushMatrix();
     glScalef(JOINT_POINT_RADIUS, JOINT_POINT_HEIGHT, JOINT_POINT_RADIUS);
-    gluSphere(jp, 1.0, 10, 10);
+    gluSphere(jointPoint, 1.0, 10, 10);
     glPopMatrix();
 }
 
 void left_upper_arm()
 {
     glPushMatrix();
-    gluCylinder(lua, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10, 10);
+    gluCylinder(leftUpperArm, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -51,7 +51,7 @@ void left_lower_arm()
 {
     glPushMatrix();
     glRotatef(0.0, 1.0, 0.0, 0.0);
-    gluCylinder(lla, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10, 10);
+    gluCylinder(leftLowerArm, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -60,21 +60,21 @@ void left_hand()
     glPushMatrix();
     glRotatef(90.0, 1.0, 0.0, 0.0);
     glScalef(HAND_RADIUS, HAND_HEIGHT, HAND_RADIUS);
-    gluSphere(lhnd, 1.0, 10, 10);
+    gluSphere(leftHand, 1.0, 10, 10);
     glPopMatrix();
 }
 
 void right_upper_arm()
 {
     glPushMatrix();
-    gluCylinder(rua, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10, 10);
+    gluCylinder(rightUpperArm, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
 void right_lower_arm()
 {
     glPushMatrix();
-    gluCylinder(rla, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10, 10);
+    gluCylinder(righLowerArm, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -83,7 +83,7 @@ void right_hand()
     glPushMatrix();
     glRotatef(90.0, 1.0, 0.0, 0.0);
     glScalef(HAND_RADIUS, HAND_HEIGHT, HAND_RADIUS);
-    gluSphere(rhnd, 1.0, 10, 10);
+    gluSphere(rightHand, 1.0, 10, 10);
     glPopMatrix();
 }
 
@@ -91,7 +91,7 @@ void left_upper_leg()
 {
     glPushMatrix();
     glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(lul, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10, 10);
+    gluCylinder(leftUpperLeg, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -99,7 +99,7 @@ void left_lower_leg()
 {
     glPushMatrix();
     glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(lll, LOWER_LEG_RADIUS, LOWER_LEG_RADIUS, LOWER_LEG_HEIGHT, 10, 10);
+    gluCylinder(leftLowerLeg, LOWER_LEG_RADIUS, LOWER_LEG_RADIUS, LOWER_LEG_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -108,15 +108,15 @@ void left_foot()
     glPushMatrix();
     glRotatef(90.0, 1.0, 0.0, 0.0);
     glScalef(FOOT_RADIUS, FOOT_HEIGHT, FOOT_RADIUS);
-    gluSphere(lft, 1.0, 10, 10);
+    gluSphere(leftFoot, 1.0, 10, 10);
     glPopMatrix();
 }
 
 void right_upper_leg()
 {
     glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(rul, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10, 10);
+    glRotatef(-90.0F, 1.0, 0.0, 0.0);
+    gluCylinder(rightUpperLeg, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -124,7 +124,7 @@ void right_lower_leg()
 {
     glPushMatrix();
     glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(rll, LOWER_LEG_RADIUS, LOWER_LEG_RADIUS, LOWER_LEG_HEIGHT, 10, 10);
+    gluCylinder(rightLowerLeg, LOWER_LEG_RADIUS, LOWER_LEG_RADIUS, LOWER_LEG_HEIGHT, 10, 10);
     glPopMatrix();
 }
 
@@ -133,12 +133,12 @@ void right_foot()
     glPushMatrix();
     glRotatef(90.0, 1.0, 0.0, 0.0);
     glScalef(FOOT_RADIUS, FOOT_HEIGHT, FOOT_RADIUS);
-    gluSphere(rft, 1.0, 10, 10);
+    gluSphere(rightFoot, 1.0, 10, 10);
     glPopMatrix();
 }
 
 //--------------------------------Display function--------------------------------
-void myDisplay(void)
+void myDisplay()
 {
     glClearColor(1, 1, 0.5, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -148,18 +148,18 @@ void myDisplay(void)
 
     glBindTexture(GL_TEXTURE_2D, texture2);
     glRotatef(theta[0], 0.0, 1.0, 0.0);
-    torso();
+    drawTorso();
     glPushMatrix();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0, TORSO_HEIGHT, 0.0);
-    neck();
+    drawNeck();
 
     glBindTexture(GL_TEXTURE_2D, texture1);
     glTranslatef(0.0, NECK_HEIGHT + 0.5 * HEAD_HEIGHT, 0.0);
     glRotatef(theta[1], 1.0, 0.0, 0.0);
     glRotatef(theta[2], 0.0, 1.0, 0.0);
-    head();
+    drawHead();
 
     glPopMatrix();   //add JOINT_POINT_
     glPushMatrix();  //add JOINT_POINT_
@@ -286,82 +286,82 @@ void keyboard(unsigned char key, int x, int y)
 {
     if (key == 'q')
     {
-        choise = 2;
+        choice = 2;
     }  // Head horiz
     if (key == 'a')
     {
-        choise = 1;
+        choice = 1;
     }  // Head vert
 
     if (key == 'w')
     {
-        choise = 3;
+        choice = 3;
     }  //left arm horiz
     if (key == 's')
     {
-        choise = 11;
+        choice = 11;
     }  //left arm vert
 
     if (key == 'e')
     {
-        choise = 5;
+        choice = 5;
     }  //right arm horiz
     if (key == 'd')
     {
-        choise = 12;
+        choice = 12;
     }  //right arm horiz
 
     if (key == 'r')
     {
-        choise = 7;
+        choice = 7;
     }  //left leg vert
     if (key == 'f')
     {
-        choise = 13;
+        choice = 13;
     }  //left leg horiz
 
     if (key == 't')
     {
-        choise = 9;
+        choice = 9;
     }  //right leg horiz
     if (key == 'g')
     {
-        choise = 14;
+        choice = 14;
     }  //right leg vert
 
     if (key == 'z')
     {
-        choise = 0;
+        choice = 0;
     }  //torso
 
     if (key == 'x')
     {
-        choise = 4;
+        choice = 4;
     }  //left_lower_arm
 
     if (key == 'c')
     {
-        choise = 6;
+        choice = 6;
     }  //right_lower_arm
 
     if (key == 'v')
     {
-        choise = 8;
+        choice = 8;
     }  //left_lower_leg
 
     if (key == 'b')
     {
-        choise = 10;
+        choice = 10;
     }  //right_lowerleg
 
     if (key == ',')
     {
-        choise = 15;
+        choice = 15;
     }  //left_foot
 
     if (key == '.')
     {
-        choise = 16;
+        choice = 16;
     }  //right_foot
 
     if (key == 'm')
@@ -389,14 +389,14 @@ void keyboard(unsigned char key, int x, int y)
 
     if (key == '9')
     {
-        theta[choise] += 5.0;
-        if (theta[choise] > 360.0) theta[choise] -= 360.0;
+        theta[choice] += 5.0;
+        if (theta[choice] > 360.0) theta[choice] -= 360.0;
         glutPostRedisplay();
     }
     if (key == '0')
     {
-        theta[choise] -= 5.0;
-        if (theta[choise] < 360.0) theta[choise] += 360.0;
+        theta[choice] -= 5.0;
+        if (theta[choice] < 360.0) theta[choice] += 360.0;
         glutPostRedisplay();
     }
 }
@@ -715,73 +715,73 @@ void myInit()
 					skin->data);
 */
     /* allocate quadrics with filled drawing style */
-    h = gluNewQuadric();
+    head = gluNewQuadric();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
-    gluQuadricTexture(h, GL_TRUE);
-    gluQuadricDrawStyle(h, GLU_FILL);
+    gluQuadricTexture(head, GL_TRUE);
+    gluQuadricDrawStyle(head, GLU_FILL);
 
-    n = gluNewQuadric();
-    gluQuadricTexture(n, GL_TRUE);
-    gluQuadricDrawStyle(n, GLU_FILL);
+    neck = gluNewQuadric();
+    gluQuadricTexture(neck, GL_TRUE);
+    gluQuadricDrawStyle(neck, GLU_FILL);
 
-    t = gluNewQuadric();
+    torso = gluNewQuadric();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
-    gluQuadricTexture(t, GL_TRUE);
-    gluQuadricDrawStyle(t, GLU_FILL);
+    gluQuadricTexture(torso, GL_TRUE);
+    gluQuadricDrawStyle(torso, GLU_FILL);
 
-    jp = gluNewQuadric();
-    gluQuadricTexture(jp, GL_TRUE);
-    gluQuadricDrawStyle(jp, GLU_FILL);
+    jointPoint = gluNewQuadric();
+    gluQuadricTexture(jointPoint, GL_TRUE);
+    gluQuadricDrawStyle(jointPoint, GLU_FILL);
 
-    lua = gluNewQuadric();
-    gluQuadricTexture(lua, GL_TRUE);
-    gluQuadricDrawStyle(lua, GLU_FILL);
+    leftUpperArm = gluNewQuadric();
+    gluQuadricTexture(leftUpperArm, GL_TRUE);
+    gluQuadricDrawStyle(leftUpperArm, GLU_FILL);
 
-    lla = gluNewQuadric();
-    gluQuadricTexture(lla, GL_TRUE);
-    gluQuadricDrawStyle(lla, GLU_FILL);
+    leftLowerArm = gluNewQuadric();
+    gluQuadricTexture(leftLowerArm, GL_TRUE);
+    gluQuadricDrawStyle(leftLowerArm, GLU_FILL);
 
-    lhnd = gluNewQuadric();
-    gluQuadricTexture(lhnd, GL_TRUE);
-    gluQuadricDrawStyle(lhnd, GLU_FILL);
+    leftHand = gluNewQuadric();
+    gluQuadricTexture(leftHand, GL_TRUE);
+    gluQuadricDrawStyle(leftHand, GLU_FILL);
 
-    rhnd = gluNewQuadric();
-    gluQuadricTexture(rhnd, GL_TRUE);
-    gluQuadricDrawStyle(rhnd, GLU_FILL);
+    rightHand = gluNewQuadric();
+    gluQuadricTexture(rightHand, GL_TRUE);
+    gluQuadricDrawStyle(rightHand, GLU_FILL);
 
-    rft = gluNewQuadric();
-    gluQuadricTexture(rft, GL_TRUE);
-    gluQuadricDrawStyle(rft, GLU_FILL);
+    rightFoot = gluNewQuadric();
+    gluQuadricTexture(rightFoot, GL_TRUE);
+    gluQuadricDrawStyle(rightFoot, GLU_FILL);
 
-    lft = gluNewQuadric();
-    gluQuadricTexture(lft, GL_TRUE);
-    gluQuadricDrawStyle(lft, GLU_FILL);
+    leftFoot = gluNewQuadric();
+    gluQuadricTexture(leftFoot, GL_TRUE);
+    gluQuadricDrawStyle(leftFoot, GLU_FILL);
 
-    rua = gluNewQuadric();
-    gluQuadricTexture(rua, GL_TRUE);
-    gluQuadricDrawStyle(rua, GLU_FILL);
+    rightUpperArm = gluNewQuadric();
+    gluQuadricTexture(rightUpperArm, GL_TRUE);
+    gluQuadricDrawStyle(rightUpperArm, GLU_FILL);
 
-    rla = gluNewQuadric();
-    gluQuadricTexture(rla, GL_TRUE);
-    gluQuadricDrawStyle(rla, GLU_FILL);
+    righLowerArm = gluNewQuadric();
+    gluQuadricTexture(righLowerArm, GL_TRUE);
+    gluQuadricDrawStyle(righLowerArm, GLU_FILL);
 
-    lul = gluNewQuadric();
-    gluQuadricTexture(lul, GL_TRUE);
-    gluQuadricDrawStyle(lul, GLU_FILL);
+    leftUpperLeg = gluNewQuadric();
+    gluQuadricTexture(leftUpperLeg, GL_TRUE);
+    gluQuadricDrawStyle(leftUpperLeg, GLU_FILL);
 
-    lll = gluNewQuadric();
-    gluQuadricTexture(lll, GL_TRUE);
-    gluQuadricDrawStyle(lll, GLU_FILL);
+    leftLowerLeg = gluNewQuadric();
+    gluQuadricTexture(leftLowerLeg, GL_TRUE);
+    gluQuadricDrawStyle(leftLowerLeg, GLU_FILL);
 
-    rul = gluNewQuadric();
-    gluQuadricTexture(rul, GL_TRUE);
-    gluQuadricDrawStyle(rul, GLU_FILL);
+    rightUpperLeg = gluNewQuadric();
+    gluQuadricTexture(rightUpperLeg, GL_TRUE);
+    gluQuadricDrawStyle(rightUpperLeg, GLU_FILL);
 
-    rll = gluNewQuadric();
-    gluQuadricTexture(rll, GL_TRUE);
-    gluQuadricDrawStyle(rll, GLU_FILL);
+    rightLowerLeg = gluNewQuadric();
+    gluQuadricTexture(rightLowerLeg, GL_TRUE);
+    gluQuadricDrawStyle(rightLowerLeg, GLU_FILL);
 }
 
 int main(int argc, char** argv)

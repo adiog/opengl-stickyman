@@ -1,15 +1,8 @@
-#include <GL/glut.h>
-#include <stdio.h>
 #include <math.h>
-#include <string.h>
 #include <stdarg.h>
-//#include <GL/glaux.h>
-
-/*
-Here is pictures to create textures
-*/
-//AUX_RGBImageRec* photo_image, *photo_body,
-//				*photo_legs,  *skin;
+#include <stdio.h>
+#include <string.h>
+#include <GL/glut.h>
 
 /*
 Define of humanoid body properties 
@@ -20,10 +13,10 @@ Define of humanoid body properties
 #define TORSO_RADIUS 1.3
 #define UPPER_ARM_HEIGHT 2.5
 #define LOWER_ARM_HEIGHT 2.3
-#define UPPER_ARM_RADIUS  0.5
-#define LOWER_ARM_RADIUS  0.5
-#define UPPER_LEG_RADIUS  0.5
-#define LOWER_LEG_RADIUS  0.5
+#define UPPER_ARM_RADIUS 0.5
+#define LOWER_ARM_RADIUS 0.5
+#define UPPER_LEG_RADIUS 0.5
+#define LOWER_LEG_RADIUS 0.5
 #define LOWER_LEG_HEIGHT 3.1
 #define UPPER_LEG_HEIGHT 3.3
 #define HEAD_HEIGHT 1.2
@@ -37,35 +30,31 @@ Define of humanoid body properties
 #define JOINT_POINT_RADIUS 0.5
 #define JOINT_POINT_HEIGHT 0.5
 
-bool flag1=true, flag2=false, 
-	 flag3=true, flag4=false,
-	 flag5=true, flag6=false,
-	 hflag=true;
+bool flag1 = true, flag2 = false,
+     flag3 = true, flag4 = false,
+     flag5 = true, flag6 = false,
+     hflag = true;
 
 /*
 Initialization of body parts' angles
 */
-static GLfloat theta[17] = {0.0,   0.0,   0.0, 90.0,
-							-20.0, 90.0, -20.0, 180.0,
-							0.0, 180.0, 0.0, 0.0,
-						    0.0, 0.0,  0.0, 0.0, 
-							0.0
-							};
-static GLint choise = 2;
+static GLfloat theta[17] = {0.0, 0.0, 0.0, 90.0, -20.0, 90.0, -20.0, 180.0, 0.0, 180.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+static GLint choice = 2;
 static GLint m_choise = 0;
 
 /*
 Body parts
 */
-GLUquadricObj *t,   *h,   *n,    *lh,
-			 *rh,   *lf,  *rf,   *jp,
-			 *lhnd, *lft, *lua,  *lla,
-			 *rua,  *rla, *lll,  *rll, 
-			 *rul,  *lul, *rhnd, *rft;
+GLUquadricObj *torso, *head, *neck, *jointPoint,
+    *leftHand, *leftFoot, *leftUpperArm, *leftLowerArm,
+    *rightUpperArm, *righLowerArm, *leftLowerLeg, *rightLowerLeg,
+    *rightUpperLeg, *leftUpperLeg, *rightHand, *rightFoot;
+
 /*
 Mouse control area & view point translation initialization
 */
-typedef struct _area {
+typedef struct _area
+{
     int id;
     int x, y;
     float min, max;
@@ -74,44 +63,58 @@ typedef struct _area {
 } area;
 
 area translation[5] = {
-    { 0, 120, 40, -30.0, 30.0, 0.0, 0.05,},
-    { 1, 180, 40, -30.0, 30.0, 0.0, 0.05,},
-    { 2, 180, 40, -200.0, 200.0, 0.0, 0.1,},
-	{ 3, 180, 120, -100, 100, 0.0, 0.5},
-	{ 4, 240, 120, -100, 100, 0.0, 0.5}
-};
+    {
+        0,
+        120,
+        40,
+        -30.0,
+        30.0,
+        0.0,
+        0.05,
+    },
+    {
+        1,
+        180,
+        40,
+        -30.0,
+        30.0,
+        0.0,
+        0.05,
+    },
+    {
+        2,
+        180,
+        40,
+        -200.0,
+        200.0,
+        0.0,
+        0.1,
+    },
+    {3, 180, 120, -100, 100, 0.0, 0.5},
+    {4, 240, 120, -100, 100, 0.0, 0.5}};
 
 /*
 gluLookAt initial values, view point rotation
 */
-GLfloat eye[3] = { 0.0, 0.0, 60.0 };
-GLfloat at[3]  = { 0.0, 0.0, 0.0 };
-GLfloat up[3]  = { 0.0, 1.0, 0.0 };
+GLfloat eye[3] = {0.0, 0.0, 60.0};
+GLfloat at[3] = {0.0, 0.0, 0.0};
+GLfloat up[3] = {0.0, 1.0, 0.0};
 
 /*
 Animation variables and angles
 */
-GLuint texture1=0; 
-GLuint texture2=0;
-GLuint texture3=0;
-GLuint texture4=0;
+GLuint texture1 = 0;
+GLuint texture2 = 0;
+GLuint texture3 = 0;
+GLuint texture4 = 0;
 
-GLuint old_thetaW3=0;
-GLuint old_thetaX4=0;
-GLuint old_thetaE5=0;
-GLuint old_thetaC6=0;
-GLuint old_thetaS11=0;
-GLuint old_thetaD12=0;
+GLuint old_thetaW3 = 0;
+GLuint old_thetaX4 = 0;
+GLuint old_thetaE5 = 0;
+GLuint old_thetaC6 = 0;
+GLuint old_thetaS11 = 0;
+GLuint old_thetaD12 = 0;
 
 GLint selection = 0;
 
 void redisplay_all(void);
-
-
-//TODO
-/*
- - Restart function
- - Stop animation function
- - More body parts' rotation
- - Rotation borders
-*/
