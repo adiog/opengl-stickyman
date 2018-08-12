@@ -4,13 +4,13 @@
 
 #include "globals.h"
 
-bool flag1 = true;
-bool flag2 = false;
-bool flag3 = true;
-bool flag4 = false;
-bool flag5 = true;
-bool flag6 = false;
-bool hflag = true;
+bool switchLeftUpperArmDirectionFlag = true;
+bool switchLeftLowerArmDirectionFlag = false;
+bool switchRightUpperArmDirectionFlag = true;
+bool switchRightLowerArmDirectionFlag = false;
+bool switchRightUpperLegDirectionFlag = true;
+bool switchLeftUpperLegDirectionFlag = false;
+bool switchHeadDirectionFlag = true;
 
 GLfloat theta[17] = {0.0, 0.0, 0.0, 90.0, -20.0, 90.0, -20.0, 180.0, 0.0, 180.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 GLint choice = 2;

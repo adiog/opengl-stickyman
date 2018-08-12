@@ -3,13 +3,13 @@
 #include <GL/glut.h>
 
 
-extern bool flag1;
-extern bool flag2;
-extern bool flag3;
-extern bool flag4;
-extern bool flag5;
-extern bool flag6;
-extern bool hflag;
+extern bool switchLeftUpperArmDirectionFlag;
+extern bool switchLeftLowerArmDirectionFlag;
+extern bool switchRightUpperArmDirectionFlag;
+extern bool switchRightLowerArmDirectionFlag;
+extern bool switchRightUpperLegDirectionFlag;
+extern bool switchLeftUpperLegDirectionFlag;
+extern bool switchHeadDirectionFlag;
 
 extern GLfloat theta[17];
 extern GLint choice;

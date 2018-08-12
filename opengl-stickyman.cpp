@@ -2,28 +2,37 @@
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
 #include "drawFunction.h"
-#include "opengl-stickyman.h"
 #include "globals.h"
+#include "opengl-stickyman.h"
 
 void timer_walk(int);
 void timer_kick(int);
 
-void myReshape(int w, int h)
+void myReshape(int width, int height)
 {
-    glViewport(0, 0, w, h);
+    glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (w <= h)
-        glOrtho(-30.0, 30.0, -30.0 * (GLfloat)h / (GLfloat)w, 30.0 * (GLfloat)h / (GLfloat)w, -200, 200);
+    if (width <= height)
+    {
+        glOrtho(-30.0,
+                30.0,
+                -30.0 * (GLfloat)height / (GLfloat)width,
+                30.0 * (GLfloat)height / (GLfloat)width,
+                -200,
+                200);
+    }
     else
-        glOrtho(-30.0 * (GLfloat)w / (GLfloat)h,
-                30.0 * (GLfloat)w / (GLfloat)h,
+    {
+        glOrtho(-30.0 * (GLfloat)width / (GLfloat)height,
+                30.0 * (GLfloat)width / (GLfloat)height,
                 -30.0,
                 30.0,
                 -200,
                 200);
+    }
 
-    gluPerspective(1.0, (float)w / h, 2.0, 1.0);
+    gluPerspective(1.0, (float)width / height, 2.0, 1.0);
     gluLookAt(translation[3].value, translation[4].value, eye[2], at[0], at[1], at[2], up[0], up[1], up[2]);
     glTranslatef(translation[0].value, translation[1].value, translation[2].value);
     glEnable(GL_DEPTH_TEST);
@@ -52,133 +61,147 @@ void myDisplay()
     glBindTexture(GL_TEXTURE_2D, texture2);
     glRotatef(theta[THETA_THORSO], 0.0, 1.0, 0.0);
     drawTorso();
-    glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0, TORSO_HEIGHT, 0.0);
-    drawNeck();
+    {
+        glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    glTranslatef(0.0, NECK_HEIGHT + 0.5 * HEAD_HEIGHT, 0.0);
-    glRotatef(theta[THETA_NECK_X], 1.0, 0.0, 0.0);
-    glRotatef(theta[THETA_NECX_Y], 0.0, 1.0, 0.0);
-    drawHead();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0, TORSO_HEIGHT, 0.0);
+        drawNeck();
 
-    glPopMatrix();   //add JOINT_POINT_
-    glPushMatrix();  //add JOINT_POINT_
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glTranslatef(0.0, NECK_HEIGHT + 0.5 * HEAD_HEIGHT, 0.0);
+        glRotatef(theta[THETA_NECK_X], 1.0, 0.0, 0.0);
+        glRotatef(theta[THETA_NECX_Y], 0.0, 1.0, 0.0);
+        drawHead();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(-0.85 * (TORSO_RADIUS + JOINT_POINT_RADIUS),
-                 0.9 * TORSO_HEIGHT,
-                 0.0);
-    joint_point();
+        glPopMatrix();
+    }
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.0, 0.0);
-    glRotatef(theta[THETA_LEFT_UPPER_ARM_X], 1.0, 0.0, 0.0);
-    glRotatef(theta[THETA_LEFT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
-    left_upper_arm();
+    {
+        glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.0, UPPER_ARM_HEIGHT);
-    joint_point();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(-0.85 * (TORSO_RADIUS + JOINT_POINT_RADIUS),
+                     0.9 * TORSO_HEIGHT,
+                     0.0);
+        joint_point();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[THETA_LEFT_LOWER_ARM_X], 1.0, 0.0, 0.0);
-    left_lower_arm();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.0, 0.0);
+        glRotatef(theta[THETA_LEFT_UPPER_ARM_X], 1.0, 0.0, 0.0);
+        glRotatef(theta[THETA_LEFT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
+        left_upper_arm();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.0, LOWER_ARM_HEIGHT);
-    left_hand();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.0, UPPER_ARM_HEIGHT);
+        joint_point();
 
-    glPopMatrix();
-    glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
+        glRotatef(theta[THETA_LEFT_LOWER_ARM_X], 1.0, 0.0, 0.0);
+        left_lower_arm();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.85 * (TORSO_RADIUS + JOINT_POINT_RADIUS),
-                 0.9 * TORSO_HEIGHT,
-                 0.0);
-    joint_point();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.0, LOWER_ARM_HEIGHT);
+        left_hand();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.0, 0.0);
-    glRotatef(theta[THETA_RIGHT_UPPER_ARM_X], 1.0, 0.0, 0.0);
-    glRotatef(theta[THETA_RIGHT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
-    right_upper_arm();
+        glPopMatrix();
+    }
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.0, UPPER_ARM_HEIGHT);
-    joint_point();
+    {
+        glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[THETA_RIGHT_LOWER_ARM], 1.0, 0.0, 0.0);
-    right_lower_arm();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.85 * (TORSO_RADIUS + JOINT_POINT_RADIUS),
+                     0.9 * TORSO_HEIGHT,
+                     0.0);
+        joint_point();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.0, LOWER_ARM_HEIGHT);
-    right_hand();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.0, 0.0);
+        glRotatef(theta[THETA_RIGHT_UPPER_ARM_X], 1.0, 0.0, 0.0);
+        glRotatef(theta[THETA_RIGHT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
+        right_upper_arm();
 
-    glPopMatrix();
-    glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.0, UPPER_ARM_HEIGHT);
+        joint_point();
 
-    glBindTexture(GL_TEXTURE_2D, texture3);
-    glTranslatef(-(TORSO_RADIUS - JOINT_POINT_RADIUS),
-                 -0.15 * JOINT_POINT_HEIGHT,
-                 0.0);
-    joint_point();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
+        glRotatef(theta[THETA_RIGHT_LOWER_ARM], 1.0, 0.0, 0.0);
+        right_lower_arm();
 
-    glBindTexture(GL_TEXTURE_2D, texture3);
-    glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[THETA_LEFT_UPPER_LEG_X], 1.0, 0.0, 0.0);
-    glRotatef(theta[THETA_LEFT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
-    left_upper_leg();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.0, LOWER_ARM_HEIGHT);
+        right_hand();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, UPPER_LEG_HEIGHT, 0.0);
-    joint_point();
+        glPopMatrix();
+    }
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[THETA_LEFT_LOWER_LEG], 1.0, 0.0, 0.0);
-    left_lower_leg();
+    {
+        glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
-    glRotatef(theta[THETA_LEFT_FOOT], 1.0, 0.0, 0.0);
-    left_foot();
+        glBindTexture(GL_TEXTURE_2D, texture3);
+        glTranslatef(-(TORSO_RADIUS - JOINT_POINT_RADIUS),
+                     -0.15 * JOINT_POINT_HEIGHT,
+                     0.0);
+        joint_point();
 
-    glPopMatrix();
-    glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, texture3);
+        glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
+        glRotatef(theta[THETA_LEFT_UPPER_LEG_X], 1.0, 0.0, 0.0);
+        glRotatef(theta[THETA_LEFT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
+        left_upper_leg();
 
-    glBindTexture(GL_TEXTURE_2D, texture3);
-    glTranslatef(TORSO_RADIUS - JOINT_POINT_RADIUS,
-                 -0.15 * JOINT_POINT_HEIGHT,
-                 0.0);
-    joint_point();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, UPPER_LEG_HEIGHT, 0.0);
+        joint_point();
 
-    glBindTexture(GL_TEXTURE_2D, texture3);
-    glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[THETA_RIGHT_UPPER_LEG_X], 1.0, 0.0, 0.0);
-    glRotatef(theta[THETA_RIGHT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
-    right_upper_leg();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
+        glRotatef(theta[THETA_LEFT_LOWER_LEG], 1.0, 0.0, 0.0);
+        left_lower_leg();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, UPPER_LEG_HEIGHT, 0.0);
-    joint_point();
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
+        glRotatef(theta[THETA_LEFT_FOOT], 1.0, 0.0, 0.0);
+        left_foot();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[THETA_RIGHT_LOWER_LEG], 1.0, 0.0, 0.0);
-    right_lower_leg();
+        glPopMatrix();
+    }
+    {
+        glPushMatrix();
 
-    glBindTexture(GL_TEXTURE_2D, texture4);
-    glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
-    glRotatef(theta[THETA_RIGHT_FOOT], 1.0, 0.0, 0.0);
-    right_foot();
+        glBindTexture(GL_TEXTURE_2D, texture3);
+        glTranslatef(TORSO_RADIUS - JOINT_POINT_RADIUS,
+                     -0.15 * JOINT_POINT_HEIGHT,
+                     0.0);
+        joint_point();
 
-    glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, texture3);
+        glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
+        glRotatef(theta[THETA_RIGHT_UPPER_LEG_X], 1.0, 0.0, 0.0);
+        glRotatef(theta[THETA_RIGHT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
+        right_upper_leg();
+
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, UPPER_LEG_HEIGHT, 0.0);
+        joint_point();
+
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
+        glRotatef(theta[THETA_RIGHT_LOWER_LEG], 1.0, 0.0, 0.0);
+        right_lower_leg();
+
+        glBindTexture(GL_TEXTURE_2D, texture4);
+        glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
+        glRotatef(theta[THETA_RIGHT_FOOT], 1.0, 0.0, 0.0);
+        right_foot();
+
+        glPopMatrix();
+    }
 
     glFlush();
     glutSwapBuffers();
@@ -274,14 +297,14 @@ void keyboard(unsigned char key, int x, int y)
 
     if (key == 'n')
     {
-        theta[THETA_LEFT_UPPER_ARM_X] = 0;                      // 0-30
-        theta[THETA_LEFT_LOWER_ARM_X] = 0;                      // 0
-        theta[THETA_LEFT_UPPER_ARM_Z] = -15;                   // 0
-        theta[THETA_RIGHT_UPPER_ARM_X] = 60;                     // 0
-        theta[THETA_RIGHT_LOWER_ARM] = -120;                   // 0
-        theta[THETA_RIGHT_UPPER_ARM_Z] = 15;                    // 0
-        glutTimerFunc(200, timer_kick, 0); /*glutTimerFunc(100,timer_kick,0);*/
-    }                                      //animation kick
+        theta[THETA_LEFT_UPPER_ARM_X] = 0;    // 0-30
+        theta[THETA_LEFT_LOWER_ARM_X] = 0;    // 0
+        theta[THETA_LEFT_UPPER_ARM_Z] = -15;  // 0
+        theta[THETA_RIGHT_UPPER_ARM_X] = 60;  // 0
+        theta[THETA_RIGHT_LOWER_ARM] = -120;  // 0
+        theta[THETA_RIGHT_UPPER_ARM_Z] = 15;  // 0
+        glutTimerFunc(200, timer_kick, 0);    /*glutTimerFunc(100,timer_kick,0);*/
+    }                                         //animation kick
 
     if (key == '9')
     {
@@ -366,7 +389,7 @@ void pressed_mouse(int x, int y)
 //--------------------------------Animation timer functions-------------------------
 void timer_walk(int)
 {
-    if (flag1)
+    if (switchLeftUpperArmDirectionFlag)
     {
         theta[THETA_LEFT_UPPER_ARM_X] += 5.0;
     }
@@ -374,10 +397,10 @@ void timer_walk(int)
     {
         theta[THETA_LEFT_UPPER_ARM_X] -= 5.0;
     }
-    if (theta[THETA_LEFT_UPPER_ARM_X] >= 110.0) flag1 = false;
-    if (theta[THETA_LEFT_UPPER_ARM_X] <= 70.0) flag1 = true;
+    if (theta[THETA_LEFT_UPPER_ARM_X] >= 110.0) switchLeftUpperArmDirectionFlag = false;
+    if (theta[THETA_LEFT_UPPER_ARM_X] <= 70.0) switchLeftUpperArmDirectionFlag = true;
 
-    if (flag2)
+    if (switchLeftLowerArmDirectionFlag)
     {
         theta[THETA_RIGHT_UPPER_ARM_X] += 5.0;
     }
@@ -385,10 +408,10 @@ void timer_walk(int)
     {
         theta[THETA_RIGHT_UPPER_ARM_X] -= 5.0;
     }
-    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 110.0) flag2 = false;
-    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 70.0) flag2 = true;
+    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 110.0) switchLeftLowerArmDirectionFlag = false;
+    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 70.0) switchLeftLowerArmDirectionFlag = true;
 
-    if (flag3)
+    if (switchRightUpperArmDirectionFlag)
     {
         theta[THETA_RIGHT_UPPER_LEG_X] += 5.0;
     }
@@ -396,10 +419,10 @@ void timer_walk(int)
     {
         theta[THETA_RIGHT_UPPER_LEG_X] -= 5.0;
     }
-    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) flag3 = false;
-    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) flag3 = true;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) switchRightUpperArmDirectionFlag = false;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) switchRightUpperArmDirectionFlag = true;
 
-    if (flag4)
+    if (switchRightLowerArmDirectionFlag)
     {
         theta[THETA_LEFT_UPPER_LEG_X] += 5.0;
     }
@@ -407,10 +430,10 @@ void timer_walk(int)
     {
         theta[THETA_LEFT_UPPER_LEG_X] -= 5.0;
     }
-    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) flag4 = false;
-    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) flag4 = true;
+    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) switchRightLowerArmDirectionFlag = false;
+    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) switchRightLowerArmDirectionFlag = true;
 
-    if (hflag)
+    if (switchHeadDirectionFlag)
     {
         theta[THETA_NECX_Y] += 5.0;
     }
@@ -418,15 +441,15 @@ void timer_walk(int)
     {
         theta[THETA_NECX_Y] -= 5.0;
     }
-    if (theta[THETA_NECX_Y] >= 30.0) hflag = false;
-    if (theta[THETA_NECX_Y] <= -30.0) hflag = true;
+    if (theta[THETA_NECX_Y] >= 30.0) switchHeadDirectionFlag = false;
+    if (theta[THETA_NECX_Y] <= -30.0) switchHeadDirectionFlag = true;
 
     glutPostRedisplay();
     glutTimerFunc(100, timer_walk, 0);
 }
 void timer_kick(int)
 {
-    if (flag1)
+    if (switchLeftUpperArmDirectionFlag)
     {
         theta[THETA_LEFT_UPPER_ARM_X] -= 15.0;
     }
@@ -434,10 +457,10 @@ void timer_kick(int)
     {
         theta[THETA_LEFT_UPPER_ARM_X] += 15.0;
     }
-    if (theta[THETA_LEFT_UPPER_ARM_X] >= 60) flag1 = true;
-    if (theta[THETA_LEFT_UPPER_ARM_X] <= 0) flag1 = false;  // 0-45
+    if (theta[THETA_LEFT_UPPER_ARM_X] >= 60) switchLeftUpperArmDirectionFlag = true;
+    if (theta[THETA_LEFT_UPPER_ARM_X] <= 0) switchLeftUpperArmDirectionFlag = false;  // 0-45
 
-    if (flag2)
+    if (switchLeftLowerArmDirectionFlag)
     {
         theta[THETA_LEFT_LOWER_ARM_X] -= 30;
     }
@@ -445,11 +468,11 @@ void timer_kick(int)
     {
         theta[THETA_LEFT_LOWER_ARM_X] += 30;
     }
-    if (theta[THETA_LEFT_LOWER_ARM_X] >= 0) flag2 = true;
-    if (theta[THETA_LEFT_LOWER_ARM_X] <= -120) flag2 = false;
+    if (theta[THETA_LEFT_LOWER_ARM_X] >= 0) switchLeftLowerArmDirectionFlag = true;
+    if (theta[THETA_LEFT_LOWER_ARM_X] <= -120) switchLeftLowerArmDirectionFlag = false;
     theta[THETA_LEFT_UPPER_ARM_Z] = -15;  // 0
 
-    if (flag3)
+    if (switchRightUpperArmDirectionFlag)
     {
         theta[THETA_RIGHT_UPPER_ARM_X] -= 15.0;
     }
@@ -457,10 +480,10 @@ void timer_kick(int)
     {
         theta[THETA_RIGHT_UPPER_ARM_X] += 15.0;
     }
-    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 60) flag3 = true;
-    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 0) flag3 = false;  // 0-45
+    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 60) switchRightUpperArmDirectionFlag = true;
+    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 0) switchRightUpperArmDirectionFlag = false;  // 0-45
 
-    if (flag4)
+    if (switchRightLowerArmDirectionFlag)
     {
         theta[THETA_RIGHT_LOWER_ARM] -= 30;
     }
@@ -468,10 +491,10 @@ void timer_kick(int)
     {
         theta[THETA_RIGHT_LOWER_ARM] += 30;
     }
-    if (theta[THETA_RIGHT_LOWER_ARM] >= 0) flag4 = true;
-    if (theta[THETA_RIGHT_LOWER_ARM] <= -120) flag4 = false;
+    if (theta[THETA_RIGHT_LOWER_ARM] >= 0) switchRightLowerArmDirectionFlag = true;
+    if (theta[THETA_RIGHT_LOWER_ARM] <= -120) switchRightLowerArmDirectionFlag = false;
 
-    if (flag5)
+    if (switchRightUpperLegDirectionFlag)
     {
         theta[THETA_RIGHT_UPPER_LEG_X] += 10.0;
     }
@@ -479,10 +502,10 @@ void timer_kick(int)
     {
         theta[THETA_RIGHT_UPPER_LEG_X] -= 10.0;
     }
-    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) flag5 = false;
-    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) flag5 = true;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) switchRightUpperLegDirectionFlag = false;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) switchRightUpperLegDirectionFlag = true;
 
-    if (flag6)
+    if (switchLeftUpperLegDirectionFlag)
     {
         theta[THETA_LEFT_UPPER_LEG_X] += 10.0;
     }
@@ -490,8 +513,8 @@ void timer_kick(int)
     {
         theta[THETA_LEFT_UPPER_LEG_X] -= 10.0;
     }
-    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) flag6 = false;
-    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) flag6 = true;
+    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) switchLeftUpperLegDirectionFlag = false;
+    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) switchLeftUpperLegDirectionFlag = true;
 
     glutPostRedisplay();
     glutTimerFunc(200, timer_kick, 0);
@@ -526,59 +549,7 @@ void myInit()
     glEnable(GL_DEPTH_TEST);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    /*		photo_body = auxDIBImageLoadA("body.bmp");
-		photo_image = auxDIBImageLoadA("photom.bmp");
-		photo_legs = auxDIBImageLoadA("shorts.bmp");
-		skin = auxDIBImageLoadA("skin.bmp");
-		glGenTextures(1, &texture2);
-		glGenTextures(1, &texture1);
-		glGenTextures(1, &texture3);
-		glGenTextures(1, &texture3);
 
-		glBindTexture (GL_TEXTURE_2D, texture2);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 
-					photo_body->sizeX,
-					photo_body->sizeY,
-					GL_RGB, GL_UNSIGNED_BYTE,
-					photo_body->data);
-
-		glBindTexture (GL_TEXTURE_2D, texture1);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 
-					photo_image->sizeX,
-					photo_image->sizeY,
-					GL_RGB, GL_UNSIGNED_BYTE,
-					photo_image->data);
-
-		glBindTexture (GL_TEXTURE_2D, texture3);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 
-					photo_legs->sizeX,
-					photo_legs->sizeY,
-					GL_RGB, GL_UNSIGNED_BYTE,
-					photo_legs->data);
-
-		glBindTexture (GL_TEXTURE_2D, texture4);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 
-					skin->sizeX,
-					skin->sizeY,
-					GL_RGB, GL_UNSIGNED_BYTE,
-					skin->data);
-*/
     /* allocate quadrics with filled drawing style */
     head = gluNewQuadric();
     glEnable(GL_DEPTH_TEST);
