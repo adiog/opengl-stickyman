@@ -4,11 +4,11 @@
 #include "drawFunction.h"
 #include "globals.h"
 #include "opengl-stickyman.h"
-
+#include <initializer_list>
 void timer_walk(int);
 void timer_kick(int);
 
-void myReshape(int width, int height)
+void rashapeSensor(int width, int height)
 {
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
@@ -44,13 +44,13 @@ void myReshape(int width, int height)
 
 void redisplay_all(void)
 {
-    myReshape(WIN_WIDTH, WIN_HEIGHT);
+    rashapeSensor(WIN_WIDTH, WIN_HEIGHT);
     glutPostRedisplay();
 }
 
 
 //--------------------------------Display function--------------------------------
-void myDisplay()
+void displaySensor()
 {
     glClearColor(1, 1, 0.5, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -58,151 +58,41 @@ void myDisplay()
     glColor3f(0.0, 0.0, 0.0);
     glColor3ub(0, 0, 0);
 
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    glRotatef(theta[THETA_THORSO], 0.0, 1.0, 0.0);
-    drawTorso();
-
     {
         glPushMatrix();
+        glColor3f(1.0, 0.0, 0.0);
 
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0, TORSO_HEIGHT, 0.0);
-        drawNeck();
-
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glTranslatef(0.0, NECK_HEIGHT + 0.5 * HEAD_HEIGHT, 0.0);
-        glRotatef(theta[THETA_NECK_X], 1.0, 0.0, 0.0);
-        glRotatef(theta[THETA_NECX_Y], 0.0, 1.0, 0.0);
-        drawHead();
-
-        glPopMatrix();
-    }
-
-    {
-        glPushMatrix();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(-0.85 * (TORSO_RADIUS + JOINT_POINT_RADIUS),
-                     0.9 * TORSO_HEIGHT,
-                     0.0);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
+        glBindTexture(GL_TEXTURE_2D, sampleTexture);
         glTranslatef(0.0, 0.0, 0.0);
-        glRotatef(theta[THETA_LEFT_UPPER_ARM_X], 1.0, 0.0, 0.0);
-        glRotatef(theta[THETA_LEFT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
-        left_upper_arm();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.0, UPPER_ARM_HEIGHT);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-        glRotatef(theta[THETA_LEFT_LOWER_ARM_X], 1.0, 0.0, 0.0);
-        left_lower_arm();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.0, LOWER_ARM_HEIGHT);
-        left_hand();
+        glRotatef(90.0, 1.0, 0.0, 0.0);
+        drawArrow(0);
 
         glPopMatrix();
     }
-
     {
         glPushMatrix();
+        glColor3f(0.0, 1.0, 0.0);
 
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.85 * (TORSO_RADIUS + JOINT_POINT_RADIUS),
-                     0.9 * TORSO_HEIGHT,
-                     0.0);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
+        glBindTexture(GL_TEXTURE_2D, sampleTexture);
         glTranslatef(0.0, 0.0, 0.0);
-        glRotatef(theta[THETA_RIGHT_UPPER_ARM_X], 1.0, 0.0, 0.0);
-        glRotatef(theta[THETA_RIGHT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
-        right_upper_arm();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.0, UPPER_ARM_HEIGHT);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-        glRotatef(theta[THETA_RIGHT_LOWER_ARM], 1.0, 0.0, 0.0);
-        right_lower_arm();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.0, LOWER_ARM_HEIGHT);
-        right_hand();
-
-        glPopMatrix();
-    }
-
-    {
-        glPushMatrix();
-
-        glBindTexture(GL_TEXTURE_2D, texture3);
-        glTranslatef(-(TORSO_RADIUS - JOINT_POINT_RADIUS),
-                     -0.15 * JOINT_POINT_HEIGHT,
-                     0.0);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture3);
-        glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-        glRotatef(theta[THETA_LEFT_UPPER_LEG_X], 1.0, 0.0, 0.0);
-        glRotatef(theta[THETA_LEFT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
-        left_upper_leg();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, UPPER_LEG_HEIGHT, 0.0);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-        glRotatef(theta[THETA_LEFT_LOWER_LEG], 1.0, 0.0, 0.0);
-        left_lower_leg();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
-        glRotatef(theta[THETA_LEFT_FOOT], 1.0, 0.0, 0.0);
-        left_foot();
+        glRotatef(90.0, 0.0, 1.0, 0.0);
+        drawArrow(1);
 
         glPopMatrix();
     }
     {
         glPushMatrix();
 
-        glBindTexture(GL_TEXTURE_2D, texture3);
-        glTranslatef(TORSO_RADIUS - JOINT_POINT_RADIUS,
-                     -0.15 * JOINT_POINT_HEIGHT,
-                     0.0);
-        joint_point();
+        glBindTexture(GL_TEXTURE_2D, sampleTexture);
+        glLoadIdentity();
+        glColor3f(0.0, 0.0, 1.0);
 
-        glBindTexture(GL_TEXTURE_2D, texture3);
-        glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-        glRotatef(theta[THETA_RIGHT_UPPER_LEG_X], 1.0, 0.0, 0.0);
-        glRotatef(theta[THETA_RIGHT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
-        right_upper_leg();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, UPPER_LEG_HEIGHT, 0.0);
-        joint_point();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-        glRotatef(theta[THETA_RIGHT_LOWER_LEG], 1.0, 0.0, 0.0);
-        right_lower_leg();
-
-        glBindTexture(GL_TEXTURE_2D, texture4);
-        glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
-        glRotatef(theta[THETA_RIGHT_FOOT], 1.0, 0.0, 0.0);
-        right_foot();
+        glTranslatef(0.0, 0.0, 0.0);
+        glRotatef(90.0, 0.0, 0.0, 1.0);
+        drawArrow(2);
 
         glPopMatrix();
     }
-
     glFlush();
     glutSwapBuffers();
 }
@@ -212,111 +102,6 @@ void keyboard(unsigned char key, int x, int y)
 {
     if (key == 'q')
     {
-        choice = 2;
-    }  // Head horiz
-    if (key == 'a')
-    {
-        choice = 1;
-    }  // Head vert
-
-    if (key == 'w')
-    {
-        choice = 3;
-    }  //left arm horiz
-    if (key == 's')
-    {
-        choice = 11;
-    }  //left arm vert
-
-    if (key == 'e')
-    {
-        choice = 5;
-    }  //right arm horiz
-    if (key == 'd')
-    {
-        choice = 12;
-    }  //right arm horiz
-
-    if (key == 'r')
-    {
-        choice = 7;
-    }  //left leg vert
-    if (key == 'f')
-    {
-        choice = 13;
-    }  //left leg horiz
-
-    if (key == 't')
-    {
-        choice = 9;
-    }  //right leg horiz
-    if (key == 'g')
-    {
-        choice = 14;
-    }  //right leg vert
-
-    if (key == 'z')
-    {
-        choice = 0;
-    }  //torso
-
-    if (key == 'x')
-    {
-        choice = 4;
-    }  //left_lower_arm
-
-    if (key == 'c')
-    {
-        choice = 6;
-    }  //right_lower_arm
-
-    if (key == 'v')
-    {
-        choice = 8;
-    }  //left_lower_leg
-
-    if (key == 'b')
-    {
-        choice = 10;
-    }  //right_lowerleg
-
-    if (key == ',')
-    {
-        choice = 15;
-    }  //left_foot
-
-    if (key == '.')
-    {
-        choice = 16;
-    }  //right_foot
-
-    if (key == 'm')
-    {
-        glutTimerFunc(100, timer_walk, 0);
-    }  //animation walk
-
-    if (key == 'n')
-    {
-        theta[THETA_LEFT_UPPER_ARM_X] = 0;    // 0-30
-        theta[THETA_LEFT_LOWER_ARM_X] = 0;    // 0
-        theta[THETA_LEFT_UPPER_ARM_Z] = -15;  // 0
-        theta[THETA_RIGHT_UPPER_ARM_X] = 60;  // 0
-        theta[THETA_RIGHT_LOWER_ARM] = -120;  // 0
-        theta[THETA_RIGHT_UPPER_ARM_Z] = 15;  // 0
-        glutTimerFunc(200, timer_kick, 0);    /*glutTimerFunc(100,timer_kick,0);*/
-    }                                         //animation kick
-
-    if (key == '9')
-    {
-        theta[choice] += 5.0;
-        if (theta[choice] > 360.0) theta[choice] -= 360.0;
-        glutPostRedisplay();
-    }
-    if (key == '0')
-    {
-        theta[choice] -= 5.0;
-        if (theta[choice] < 360.0) theta[choice] += 360.0;
-        glutPostRedisplay();
     }
 }
 
@@ -345,7 +130,7 @@ int old_y, old_x;
 
 void menu(int id)
 {
-    if (id < 3) m_choise = id;
+    if (id < 3) mouseChoice = id;
     if (id == 3) exit(1);
 }
 
@@ -353,20 +138,20 @@ void mouse(int button, int state, int x, int y)
 {
     selection = 0;
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN
-        && (m_choise == 0 || m_choise == 2))
+        && (mouseChoice == 0 || mouseChoice == 2))
     {
         selection += area_hit(&translation[0], x, y);
-        if (m_choise == 0) selection += area_hit(&translation[0], x, y);
-        if (m_choise == 2) selection += area_hit(&translation[3], x, y);
+        if (mouseChoice == 0) selection += area_hit(&translation[0], x, y);
+        if (mouseChoice == 2) selection += area_hit(&translation[3], x, y);
         old_x = x;
         redisplay_all();
     }
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN
-        && ((m_choise == 0 || m_choise == 1) || m_choise == 2))
+        && ((mouseChoice == 0 || mouseChoice == 1) || mouseChoice == 2))
     {
-        if (m_choise == 0) selection += area_hit(&translation[1], x, y);
-        if (m_choise == 1) selection += area_hit(&translation[2], x, y);
-        if (m_choise == 2) selection += area_hit(&translation[4], x, y);
+        if (mouseChoice == 0) selection += area_hit(&translation[1], x, y);
+        if (mouseChoice == 1) selection += area_hit(&translation[2], x, y);
+        if (mouseChoice == 2) selection += area_hit(&translation[4], x, y);
         old_y = y;
         redisplay_all();
     }
@@ -389,133 +174,11 @@ void pressed_mouse(int x, int y)
 //--------------------------------Animation timer functions-------------------------
 void timer_walk(int)
 {
-    if (switchLeftUpperArmDirectionFlag)
-    {
-        theta[THETA_LEFT_UPPER_ARM_X] += 5.0;
-    }
-    else
-    {
-        theta[THETA_LEFT_UPPER_ARM_X] -= 5.0;
-    }
-    if (theta[THETA_LEFT_UPPER_ARM_X] >= 110.0) switchLeftUpperArmDirectionFlag = false;
-    if (theta[THETA_LEFT_UPPER_ARM_X] <= 70.0) switchLeftUpperArmDirectionFlag = true;
-
-    if (switchLeftLowerArmDirectionFlag)
-    {
-        theta[THETA_RIGHT_UPPER_ARM_X] += 5.0;
-    }
-    else
-    {
-        theta[THETA_RIGHT_UPPER_ARM_X] -= 5.0;
-    }
-    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 110.0) switchLeftLowerArmDirectionFlag = false;
-    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 70.0) switchLeftLowerArmDirectionFlag = true;
-
-    if (switchRightUpperArmDirectionFlag)
-    {
-        theta[THETA_RIGHT_UPPER_LEG_X] += 5.0;
-    }
-    else
-    {
-        theta[THETA_RIGHT_UPPER_LEG_X] -= 5.0;
-    }
-    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) switchRightUpperArmDirectionFlag = false;
-    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) switchRightUpperArmDirectionFlag = true;
-
-    if (switchRightLowerArmDirectionFlag)
-    {
-        theta[THETA_LEFT_UPPER_LEG_X] += 5.0;
-    }
-    else
-    {
-        theta[THETA_LEFT_UPPER_LEG_X] -= 5.0;
-    }
-    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) switchRightLowerArmDirectionFlag = false;
-    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) switchRightLowerArmDirectionFlag = true;
-
-    if (switchHeadDirectionFlag)
-    {
-        theta[THETA_NECX_Y] += 5.0;
-    }
-    else
-    {
-        theta[THETA_NECX_Y] -= 5.0;
-    }
-    if (theta[THETA_NECX_Y] >= 30.0) switchHeadDirectionFlag = false;
-    if (theta[THETA_NECX_Y] <= -30.0) switchHeadDirectionFlag = true;
-
     glutPostRedisplay();
     glutTimerFunc(100, timer_walk, 0);
 }
 void timer_kick(int)
 {
-    if (switchLeftUpperArmDirectionFlag)
-    {
-        theta[THETA_LEFT_UPPER_ARM_X] -= 15.0;
-    }
-    else
-    {
-        theta[THETA_LEFT_UPPER_ARM_X] += 15.0;
-    }
-    if (theta[THETA_LEFT_UPPER_ARM_X] >= 60) switchLeftUpperArmDirectionFlag = true;
-    if (theta[THETA_LEFT_UPPER_ARM_X] <= 0) switchLeftUpperArmDirectionFlag = false;  // 0-45
-
-    if (switchLeftLowerArmDirectionFlag)
-    {
-        theta[THETA_LEFT_LOWER_ARM_X] -= 30;
-    }
-    else
-    {
-        theta[THETA_LEFT_LOWER_ARM_X] += 30;
-    }
-    if (theta[THETA_LEFT_LOWER_ARM_X] >= 0) switchLeftLowerArmDirectionFlag = true;
-    if (theta[THETA_LEFT_LOWER_ARM_X] <= -120) switchLeftLowerArmDirectionFlag = false;
-    theta[THETA_LEFT_UPPER_ARM_Z] = -15;  // 0
-
-    if (switchRightUpperArmDirectionFlag)
-    {
-        theta[THETA_RIGHT_UPPER_ARM_X] -= 15.0;
-    }
-    else
-    {
-        theta[THETA_RIGHT_UPPER_ARM_X] += 15.0;
-    }
-    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 60) switchRightUpperArmDirectionFlag = true;
-    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 0) switchRightUpperArmDirectionFlag = false;  // 0-45
-
-    if (switchRightLowerArmDirectionFlag)
-    {
-        theta[THETA_RIGHT_LOWER_ARM] -= 30;
-    }
-    else
-    {
-        theta[THETA_RIGHT_LOWER_ARM] += 30;
-    }
-    if (theta[THETA_RIGHT_LOWER_ARM] >= 0) switchRightLowerArmDirectionFlag = true;
-    if (theta[THETA_RIGHT_LOWER_ARM] <= -120) switchRightLowerArmDirectionFlag = false;
-
-    if (switchRightUpperLegDirectionFlag)
-    {
-        theta[THETA_RIGHT_UPPER_LEG_X] += 10.0;
-    }
-    else
-    {
-        theta[THETA_RIGHT_UPPER_LEG_X] -= 10.0;
-    }
-    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) switchRightUpperLegDirectionFlag = false;
-    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) switchRightUpperLegDirectionFlag = true;
-
-    if (switchLeftUpperLegDirectionFlag)
-    {
-        theta[THETA_LEFT_UPPER_LEG_X] += 10.0;
-    }
-    else
-    {
-        theta[THETA_LEFT_UPPER_LEG_X] -= 10.0;
-    }
-    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) switchLeftUpperLegDirectionFlag = false;
-    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) switchLeftUpperLegDirectionFlag = true;
-
     glutPostRedisplay();
     glutTimerFunc(200, timer_kick, 0);
 }
@@ -550,74 +213,11 @@ void myInit()
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    /* allocate quadrics with filled drawing style */
-    head = gluNewQuadric();
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-    gluQuadricTexture(head, GL_TRUE);
-    gluQuadricDrawStyle(head, GLU_FILL);
-
-    neck = gluNewQuadric();
-    gluQuadricTexture(neck, GL_TRUE);
-    gluQuadricDrawStyle(neck, GLU_FILL);
-
-    torso = gluNewQuadric();
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-    gluQuadricTexture(torso, GL_TRUE);
-    gluQuadricDrawStyle(torso, GLU_FILL);
-
-    jointPoint = gluNewQuadric();
-    gluQuadricTexture(jointPoint, GL_TRUE);
-    gluQuadricDrawStyle(jointPoint, GLU_FILL);
-
-    leftUpperArm = gluNewQuadric();
-    gluQuadricTexture(leftUpperArm, GL_TRUE);
-    gluQuadricDrawStyle(leftUpperArm, GLU_FILL);
-
-    leftLowerArm = gluNewQuadric();
-    gluQuadricTexture(leftLowerArm, GL_TRUE);
-    gluQuadricDrawStyle(leftLowerArm, GLU_FILL);
-
-    leftHand = gluNewQuadric();
-    gluQuadricTexture(leftHand, GL_TRUE);
-    gluQuadricDrawStyle(leftHand, GLU_FILL);
-
-    rightHand = gluNewQuadric();
-    gluQuadricTexture(rightHand, GL_TRUE);
-    gluQuadricDrawStyle(rightHand, GLU_FILL);
-
-    rightFoot = gluNewQuadric();
-    gluQuadricTexture(rightFoot, GL_TRUE);
-    gluQuadricDrawStyle(rightFoot, GLU_FILL);
-
-    leftFoot = gluNewQuadric();
-    gluQuadricTexture(leftFoot, GL_TRUE);
-    gluQuadricDrawStyle(leftFoot, GLU_FILL);
-
-    rightUpperArm = gluNewQuadric();
-    gluQuadricTexture(rightUpperArm, GL_TRUE);
-    gluQuadricDrawStyle(rightUpperArm, GLU_FILL);
-
-    righLowerArm = gluNewQuadric();
-    gluQuadricTexture(righLowerArm, GL_TRUE);
-    gluQuadricDrawStyle(righLowerArm, GLU_FILL);
-
-    leftUpperLeg = gluNewQuadric();
-    gluQuadricTexture(leftUpperLeg, GL_TRUE);
-    gluQuadricDrawStyle(leftUpperLeg, GLU_FILL);
-
-    leftLowerLeg = gluNewQuadric();
-    gluQuadricTexture(leftLowerLeg, GL_TRUE);
-    gluQuadricDrawStyle(leftLowerLeg, GLU_FILL);
-
-    rightUpperLeg = gluNewQuadric();
-    gluQuadricTexture(rightUpperLeg, GL_TRUE);
-    gluQuadricDrawStyle(rightUpperLeg, GLU_FILL);
-
-    rightLowerLeg = gluNewQuadric();
-    gluQuadricTexture(rightLowerLeg, GL_TRUE);
-    gluQuadricDrawStyle(rightLowerLeg, GLU_FILL);
+    for(auto axis : {0,1,2}) {
+        sensorArrow[axis] = gluNewQuadric();
+        gluQuadricTexture(sensorArrow[axis], GL_TRUE);
+        gluQuadricDrawStyle(sensorArrow[axis], GLU_FILL);
+    }
 }
 
 int main(int argc, char** argv)
@@ -627,9 +227,10 @@ int main(int argc, char** argv)
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(50, 50);
     glutCreateWindow("opengl-stickman");
+
     myInit();
-    glutReshapeFunc(myReshape);
-    glutDisplayFunc(myDisplay);
+    glutReshapeFunc(rashapeSensor);
+    glutDisplayFunc(displaySensor);
     glutMotionFunc(pressed_mouse);
     glutMouseFunc(mouse);
     glutCreateMenu(menu);

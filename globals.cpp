@@ -1,25 +1,11 @@
-// This file is a part of Treadmill project.
-// Copyright 2018 Disco WTMH S.A.
-
+// This file is a part of opengl-stickyman project.
+// Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
 #include "globals.h"
 
-bool switchLeftUpperArmDirectionFlag = true;
-bool switchLeftLowerArmDirectionFlag = false;
-bool switchRightUpperArmDirectionFlag = true;
-bool switchRightLowerArmDirectionFlag = false;
-bool switchRightUpperLegDirectionFlag = true;
-bool switchLeftUpperLegDirectionFlag = false;
-bool switchHeadDirectionFlag = true;
 
-GLfloat theta[17] = {0.0, 0.0, 0.0, 90.0, -20.0, 90.0, -20.0, 180.0, 0.0, 180.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-GLint choice = 2;
-GLint m_choise = 0;
-
-GLUquadricObj *torso, *head, *neck, *jointPoint,
-    *leftHand, *leftFoot, *leftUpperArm, *leftLowerArm,
-    *rightUpperArm, *righLowerArm, *leftLowerLeg, *rightLowerLeg,
-    *rightUpperLeg, *leftUpperLeg, *rightHand, *rightFoot;
+GLint mouseChoice;
+GLUquadricObj *sensorArrow[3];
 
 area translation[5] = {
     {
@@ -56,9 +42,6 @@ GLfloat eye[3] = {0.0, 0.0, 60.0};
 GLfloat at[3] = {0.0, 0.0, 0.0};
 GLfloat up[3] = {0.0, 1.0, 0.0};
 
-GLuint texture1 = 0;
-GLuint texture2 = 0;
-GLuint texture3 = 0;
-GLuint texture4 = 0;
+GLuint sampleTexture = 0;
 
 GLint selection = 0;
