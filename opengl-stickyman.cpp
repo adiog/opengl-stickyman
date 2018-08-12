@@ -1,141 +1,44 @@
-//================================Humanoid Robot====================================
+// This file is a part of opengl-stickyman project.
+// Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#include "drawFunction.h"
 #include "opengl-stickyman.h"
+#include "globals.h"
 
 void timer_walk(int);
 void timer_kick(int);
 
-//--------------------------------draw body functions-------------------------------
-void drawHead()
+void myReshape(int w, int h)
 {
-    glPushMatrix();
-    glColor3f(1.0, 0.0, 5.0);
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    glRotatef(15.0, 0.0, 0.0, 1.0);
-    glScalef(HEAD_HEIGHT, HEAD_HEIGHT, HEAD_RADIUS);
-    gluSphere(head, 1.0, 10, 10);
-    glPopMatrix();
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    if (w <= h)
+        glOrtho(-30.0, 30.0, -30.0 * (GLfloat)h / (GLfloat)w, 30.0 * (GLfloat)h / (GLfloat)w, -200, 200);
+    else
+        glOrtho(-30.0 * (GLfloat)w / (GLfloat)h,
+                30.0 * (GLfloat)w / (GLfloat)h,
+                -30.0,
+                30.0,
+                -200,
+                200);
+
+    gluPerspective(1.0, (float)w / h, 2.0, 1.0);
+    gluLookAt(translation[3].value, translation[4].value, eye[2], at[0], at[1], at[2], up[0], up[1], up[2]);
+    glTranslatef(translation[0].value, translation[1].value, translation[2].value);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
-void drawNeck()
+void redisplay_all(void)
 {
-    glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(neck, NECK_RADIUS, NECK_RADIUS, NECK_HEIGHT, 10, 10);
-    glPopMatrix();
+    myReshape(WIN_WIDTH, WIN_HEIGHT);
+    glutPostRedisplay();
 }
 
-void drawTorso()
-{
-    glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(torso, TORSO_RADIUS, TORSO_RADIUS, TORSO_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void joint_point()
-{
-    glPushMatrix();
-    glScalef(JOINT_POINT_RADIUS, JOINT_POINT_HEIGHT, JOINT_POINT_RADIUS);
-    gluSphere(jointPoint, 1.0, 10, 10);
-    glPopMatrix();
-}
-
-void left_upper_arm()
-{
-    glPushMatrix();
-    gluCylinder(leftUpperArm, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void left_lower_arm()
-{
-    glPushMatrix();
-    glRotatef(0.0, 1.0, 0.0, 0.0);
-    gluCylinder(leftLowerArm, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void left_hand()
-{
-    glPushMatrix();
-    glRotatef(90.0, 1.0, 0.0, 0.0);
-    glScalef(HAND_RADIUS, HAND_HEIGHT, HAND_RADIUS);
-    gluSphere(leftHand, 1.0, 10, 10);
-    glPopMatrix();
-}
-
-void right_upper_arm()
-{
-    glPushMatrix();
-    gluCylinder(rightUpperArm, UPPER_ARM_RADIUS, UPPER_ARM_RADIUS, UPPER_ARM_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void right_lower_arm()
-{
-    glPushMatrix();
-    gluCylinder(righLowerArm, LOWER_ARM_RADIUS, LOWER_ARM_RADIUS, LOWER_ARM_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void right_hand()
-{
-    glPushMatrix();
-    glRotatef(90.0, 1.0, 0.0, 0.0);
-    glScalef(HAND_RADIUS, HAND_HEIGHT, HAND_RADIUS);
-    gluSphere(rightHand, 1.0, 10, 10);
-    glPopMatrix();
-}
-
-void left_upper_leg()
-{
-    glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(leftUpperLeg, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void left_lower_leg()
-{
-    glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(leftLowerLeg, LOWER_LEG_RADIUS, LOWER_LEG_RADIUS, LOWER_LEG_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void left_foot()
-{
-    glPushMatrix();
-    glRotatef(90.0, 1.0, 0.0, 0.0);
-    glScalef(FOOT_RADIUS, FOOT_HEIGHT, FOOT_RADIUS);
-    gluSphere(leftFoot, 1.0, 10, 10);
-    glPopMatrix();
-}
-
-void right_upper_leg()
-{
-    glPushMatrix();
-    glRotatef(-90.0F, 1.0, 0.0, 0.0);
-    gluCylinder(rightUpperLeg, UPPER_LEG_RADIUS, UPPER_LEG_RADIUS, UPPER_LEG_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void right_lower_leg()
-{
-    glPushMatrix();
-    glRotatef(-90.0, 1.0, 0.0, 0.0);
-    gluCylinder(rightLowerLeg, LOWER_LEG_RADIUS, LOWER_LEG_RADIUS, LOWER_LEG_HEIGHT, 10, 10);
-    glPopMatrix();
-}
-
-void right_foot()
-{
-    glPushMatrix();
-    glRotatef(90.0, 1.0, 0.0, 0.0);
-    glScalef(FOOT_RADIUS, FOOT_HEIGHT, FOOT_RADIUS);
-    gluSphere(rightFoot, 1.0, 10, 10);
-    glPopMatrix();
-}
 
 //--------------------------------Display function--------------------------------
 void myDisplay()
@@ -147,7 +50,7 @@ void myDisplay()
     glColor3ub(0, 0, 0);
 
     glBindTexture(GL_TEXTURE_2D, texture2);
-    glRotatef(theta[0], 0.0, 1.0, 0.0);
+    glRotatef(theta[THETA_THORSO], 0.0, 1.0, 0.0);
     drawTorso();
     glPushMatrix();
 
@@ -157,8 +60,8 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture1);
     glTranslatef(0.0, NECK_HEIGHT + 0.5 * HEAD_HEIGHT, 0.0);
-    glRotatef(theta[1], 1.0, 0.0, 0.0);
-    glRotatef(theta[2], 0.0, 1.0, 0.0);
+    glRotatef(theta[THETA_NECK_X], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_NECX_Y], 0.0, 1.0, 0.0);
     drawHead();
 
     glPopMatrix();   //add JOINT_POINT_
@@ -172,8 +75,8 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, 0.0, 0.0);
-    glRotatef(theta[3], 1.0, 0.0, 0.0);
-    glRotatef(theta[11], 0.0, 0.0, 1.0);
+    glRotatef(theta[THETA_LEFT_UPPER_ARM_X], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_LEFT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
     left_upper_arm();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
@@ -182,7 +85,7 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[4], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_LEFT_LOWER_ARM_X], 1.0, 0.0, 0.0);
     left_lower_arm();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
@@ -200,8 +103,8 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, 0.0, 0.0);
-    glRotatef(theta[5], 1.0, 0.0, 0.0);
-    glRotatef(theta[12], 0.0, 0.0, 1.0);
+    glRotatef(theta[THETA_RIGHT_UPPER_ARM_X], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_RIGHT_UPPER_ARM_Z], 0.0, 0.0, 1.0);
     right_upper_arm();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
@@ -210,7 +113,7 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[6], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_RIGHT_LOWER_ARM], 1.0, 0.0, 0.0);
     right_lower_arm();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
@@ -228,8 +131,8 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture3);
     glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[7], 1.0, 0.0, 0.0);
-    glRotatef(theta[13], 0.0, 0.0, 1.0);
+    glRotatef(theta[THETA_LEFT_UPPER_LEG_X], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_LEFT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
     left_upper_leg();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
@@ -238,12 +141,12 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[8], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_LEFT_LOWER_LEG], 1.0, 0.0, 0.0);
     left_lower_leg();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
-    glRotatef(theta[15], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_LEFT_FOOT], 1.0, 0.0, 0.0);
     left_foot();
 
     glPopMatrix();
@@ -257,8 +160,8 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture3);
     glTranslatef(0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[9], 1.0, 0.0, 0.0);
-    glRotatef(theta[14], 0.0, 0.0, 1.0);
+    glRotatef(theta[THETA_RIGHT_UPPER_LEG_X], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_RIGHT_UPPER_LEG_Z], 0.0, 0.0, 1.0);
     right_upper_leg();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
@@ -267,12 +170,12 @@ void myDisplay()
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, 0.1 * JOINT_POINT_HEIGHT, 0.0);
-    glRotatef(theta[10], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_RIGHT_LOWER_LEG], 1.0, 0.0, 0.0);
     right_lower_leg();
 
     glBindTexture(GL_TEXTURE_2D, texture4);
     glTranslatef(0.0, LOWER_LEG_HEIGHT, -0.5 * FOOT_HEIGHT);
-    glRotatef(theta[16], 1.0, 0.0, 0.0);
+    glRotatef(theta[THETA_RIGHT_FOOT], 1.0, 0.0, 0.0);
     right_foot();
 
     glPopMatrix();
@@ -371,13 +274,6 @@ void keyboard(unsigned char key, int x, int y)
 
     if (key == 'n')
     {
-        old_thetaW3 = theta[3];
-        old_thetaX4 = theta[4];
-        old_thetaE5 = theta[5];
-        old_thetaC6 = theta[6];
-        old_thetaS11 = theta[11];
-        old_thetaD12 = theta[12];
-
         theta[3] = 0;                      // 0-30
         theta[4] = 0;                      // 0
         theta[11] = -15;                   // 0
@@ -467,37 +363,6 @@ void pressed_mouse(int x, int y)
 }
 
 //--------------------------------Reshape & redisplay functions--------------------
-void myReshape(int w, int h)
-{
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h)
-        glOrtho(-30.0, 30.0, -30.0 * (GLfloat)h / (GLfloat)w, 30.0 * (GLfloat)h / (GLfloat)w, -200, 200);
-    else
-        glOrtho(-30.0 * (GLfloat)w / (GLfloat)h,
-                30.0 * (GLfloat)w / (GLfloat)h,
-                -30.0,
-                30.0,
-                -200,
-                200);
-
-    gluPerspective(1.0, (float)w / h, 2.0, 1.0);
-    gluLookAt(translation[3].value, translation[4].value, eye[2], at[0], at[1], at[2], up[0], up[1], up[2]);
-    glTranslatef(translation[0].value, translation[1].value, translation[2].value);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
-void redisplay_all(void)
-{
-    myReshape(WIN_WIDTH, WIN_HEIGHT);
-    glutPostRedisplay();
-}
-
 //--------------------------------Animation timer functions-------------------------
 void timer_walk(int)
 {
@@ -790,7 +655,7 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutInitWindowPosition(50, 50);
-    glutCreateWindow("Humanoid");
+    glutCreateWindow("opengl-stickman");
     myInit();
     glutReshapeFunc(myReshape);
     glutDisplayFunc(myDisplay);
