@@ -274,12 +274,12 @@ void keyboard(unsigned char key, int x, int y)
 
     if (key == 'n')
     {
-        theta[3] = 0;                      // 0-30
-        theta[4] = 0;                      // 0
-        theta[11] = -15;                   // 0
-        theta[5] = 60;                     // 0
-        theta[6] = -120;                   // 0
-        theta[12] = 15;                    // 0
+        theta[THETA_LEFT_UPPER_ARM_X] = 0;                      // 0-30
+        theta[THETA_LEFT_LOWER_ARM_X] = 0;                      // 0
+        theta[THETA_LEFT_UPPER_ARM_Z] = -15;                   // 0
+        theta[THETA_RIGHT_UPPER_ARM_X] = 60;                     // 0
+        theta[THETA_RIGHT_LOWER_ARM] = -120;                   // 0
+        theta[THETA_RIGHT_UPPER_ARM_Z] = 15;                    // 0
         glutTimerFunc(200, timer_kick, 0); /*glutTimerFunc(100,timer_kick,0);*/
     }                                      //animation kick
 
@@ -368,58 +368,58 @@ void timer_walk(int)
 {
     if (flag1)
     {
-        theta[3] += 5.0;
+        theta[THETA_LEFT_UPPER_ARM_X] += 5.0;
     }
     else
     {
-        theta[3] -= 5.0;
+        theta[THETA_LEFT_UPPER_ARM_X] -= 5.0;
     }
-    if (theta[3] >= 110.0) flag1 = false;
-    if (theta[3] <= 70.0) flag1 = true;
+    if (theta[THETA_LEFT_UPPER_ARM_X] >= 110.0) flag1 = false;
+    if (theta[THETA_LEFT_UPPER_ARM_X] <= 70.0) flag1 = true;
 
     if (flag2)
     {
-        theta[5] += 5.0;
+        theta[THETA_RIGHT_UPPER_ARM_X] += 5.0;
     }
     else
     {
-        theta[5] -= 5.0;
+        theta[THETA_RIGHT_UPPER_ARM_X] -= 5.0;
     }
-    if (theta[5] >= 110.0) flag2 = false;
-    if (theta[5] <= 70.0) flag2 = true;
+    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 110.0) flag2 = false;
+    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 70.0) flag2 = true;
 
     if (flag3)
     {
-        theta[9] += 5.0;
+        theta[THETA_RIGHT_UPPER_LEG_X] += 5.0;
     }
     else
     {
-        theta[9] -= 5.0;
+        theta[THETA_RIGHT_UPPER_LEG_X] -= 5.0;
     }
-    if (theta[9] >= 200.0) flag3 = false;
-    if (theta[9] <= 160.0) flag3 = true;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) flag3 = false;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) flag3 = true;
 
     if (flag4)
     {
-        theta[7] += 5.0;
+        theta[THETA_LEFT_UPPER_LEG_X] += 5.0;
     }
     else
     {
-        theta[7] -= 5.0;
+        theta[THETA_LEFT_UPPER_LEG_X] -= 5.0;
     }
-    if (theta[7] >= 200.0) flag4 = false;
-    if (theta[7] <= 160.0) flag4 = true;
+    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) flag4 = false;
+    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) flag4 = true;
 
     if (hflag)
     {
-        theta[2] += 5.0;
+        theta[THETA_NECX_Y] += 5.0;
     }
     else
     {
-        theta[2] -= 5.0;
+        theta[THETA_NECX_Y] -= 5.0;
     }
-    if (theta[2] >= 30.0) hflag = false;
-    if (theta[2] <= -30.0) hflag = true;
+    if (theta[THETA_NECX_Y] >= 30.0) hflag = false;
+    if (theta[THETA_NECX_Y] <= -30.0) hflag = true;
 
     glutPostRedisplay();
     glutTimerFunc(100, timer_walk, 0);
@@ -428,70 +428,70 @@ void timer_kick(int)
 {
     if (flag1)
     {
-        theta[3] -= 15.0;
+        theta[THETA_LEFT_UPPER_ARM_X] -= 15.0;
     }
     else
     {
-        theta[3] += 15.0;
+        theta[THETA_LEFT_UPPER_ARM_X] += 15.0;
     }
-    if (theta[3] >= 60) flag1 = true;
-    if (theta[3] <= 0) flag1 = false;  // 0-45
+    if (theta[THETA_LEFT_UPPER_ARM_X] >= 60) flag1 = true;
+    if (theta[THETA_LEFT_UPPER_ARM_X] <= 0) flag1 = false;  // 0-45
 
     if (flag2)
     {
-        theta[4] -= 30;
+        theta[THETA_LEFT_LOWER_ARM_X] -= 30;
     }
     else
     {
-        theta[4] += 30;
+        theta[THETA_LEFT_LOWER_ARM_X] += 30;
     }
-    if (theta[4] >= 0) flag2 = true;
-    if (theta[4] <= -120) flag2 = false;
-    theta[11] = -15;  // 0
+    if (theta[THETA_LEFT_LOWER_ARM_X] >= 0) flag2 = true;
+    if (theta[THETA_LEFT_LOWER_ARM_X] <= -120) flag2 = false;
+    theta[THETA_LEFT_UPPER_ARM_Z] = -15;  // 0
 
     if (flag3)
     {
-        theta[5] -= 15.0;
+        theta[THETA_RIGHT_UPPER_ARM_X] -= 15.0;
     }
     else
     {
-        theta[5] += 15.0;
+        theta[THETA_RIGHT_UPPER_ARM_X] += 15.0;
     }
-    if (theta[5] >= 60) flag3 = true;
-    if (theta[5] <= 0) flag3 = false;  // 0-45
+    if (theta[THETA_RIGHT_UPPER_ARM_X] >= 60) flag3 = true;
+    if (theta[THETA_RIGHT_UPPER_ARM_X] <= 0) flag3 = false;  // 0-45
 
     if (flag4)
     {
-        theta[6] -= 30;
+        theta[THETA_RIGHT_LOWER_ARM] -= 30;
     }
     else
     {
-        theta[6] += 30;
+        theta[THETA_RIGHT_LOWER_ARM] += 30;
     }
-    if (theta[6] >= 0) flag4 = true;
-    if (theta[6] <= -120) flag4 = false;
+    if (theta[THETA_RIGHT_LOWER_ARM] >= 0) flag4 = true;
+    if (theta[THETA_RIGHT_LOWER_ARM] <= -120) flag4 = false;
 
     if (flag5)
     {
-        theta[9] += 10.0;
+        theta[THETA_RIGHT_UPPER_LEG_X] += 10.0;
     }
     else
     {
-        theta[9] -= 10.0;
+        theta[THETA_RIGHT_UPPER_LEG_X] -= 10.0;
     }
-    if (theta[9] >= 200.0) flag5 = false;
-    if (theta[9] <= 160.0) flag5 = true;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] >= 200.0) flag5 = false;
+    if (theta[THETA_RIGHT_UPPER_LEG_X] <= 160.0) flag5 = true;
 
     if (flag6)
     {
-        theta[7] += 10.0;
+        theta[THETA_LEFT_UPPER_LEG_X] += 10.0;
     }
     else
     {
-        theta[7] -= 10.0;
+        theta[THETA_LEFT_UPPER_LEG_X] -= 10.0;
     }
-    if (theta[7] >= 200.0) flag6 = false;
-    if (theta[7] <= 160.0) flag6 = true;
+    if (theta[THETA_LEFT_UPPER_LEG_X] >= 200.0) flag6 = false;
+    if (theta[THETA_LEFT_UPPER_LEG_X] <= 160.0) flag6 = true;
 
     glutPostRedisplay();
     glutTimerFunc(200, timer_kick, 0);
