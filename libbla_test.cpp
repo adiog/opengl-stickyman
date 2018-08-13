@@ -2,7 +2,7 @@
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
 #include "googletest"
-#include "libmath.h"
+#include "libbla.h"
 
 
 TEST(libmath, reduce111)

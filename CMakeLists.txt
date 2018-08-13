@@ -12,5 +12,5 @@ add_executable(opengl-stickyman
         )
 target_link_libraries(opengl-stickyman GL glut GLU)
 
-add_executable(libmath_test libmath_test.cpp libmath.cpp libmath.h)
-target_link_libraries(libmath_test gtest pthread)
+add_executable(libbla_test libbla_test.cpp libbla.cpp libbla.h)
+target_link_libraries(libbla_test gtest pthread)

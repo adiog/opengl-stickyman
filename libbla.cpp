@@ -1,7 +1,7 @@
 // This file is a part of opengl-stickyman project.
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-#include "libmath.h"
+#include "libbla.h"
 
 constexpr const V3 ZERO3 = {0.0, 0.0, 0.0};
 constexpr const M33 ZERO33 = {ZERO3, ZERO3, ZERO3};
