@@ -15,26 +15,44 @@ TEST(libmath, reduce111)
     V3 r = v * mNPoseRotation;
 
     // then
-    EXPECT_EQ(getNorm(v), getNorm(r));
+    EXPECT_DOUBLE_EQ(r[X], 0.0);
+    //EXPECT_DOUBLE_EQ(r[Y], 0.0);
+    EXPECT_NEAR(r[Y], 0.0, 0.000000000000001);
+    EXPECT_DOUBLE_EQ(r[Z], getNorm(v));
 }
 
-TEST(libmath, calibration)
+TEST(libmath, getCalibrationMatrixHuman)
 {
     // given
-    V3 vNPose = {3, 4, 1};
-    V3 vSPose = {3, 4, -1};
+    V3 vNPose = {1, 0, -1};
+    V3 vSPose = {1, 0, 1};
 
-    M33 mNPoseRotation = getRotationMatrixReducingYAndX(vNPose);
-    V3 vSPosePostNPoseRotation = vSPose * mNPoseRotation;
-    M33 mCalibration = getRotationMatrix(vSPosePostNPoseRotation, Z, Y);
+    // when
+    M33 mSensorToSegment = getCalibrationMatrix(vNPose, vSPose);
 
-    M33 mSensorToSegment = mNPoseRotation * mCalibration;
-
-    V3 vRandomInNPosePosePlane = {3, 4, 0};
-
+    // then
+    V3 vRandomInNPosePosePlane = {1.41, 0, 0};
     V3 vRandomSegment = vRandomInNPosePosePlane * mSensorToSegment;
     Real angleSquat = atan2(vRandomSegment[0], vRandomSegment[2]);
+
+    EXPECT_DOUBLE_EQ(angleSquat, M_PI_4);
 }
 
+TEST(libmath, getCalibrationMatrixRobot)
+{
+    // given
+    V3 vNPose = {1/sqrt(2), 1/sqrt(2), -1};
+    V3 vSPose = {1/sqrt(2), 1/sqrt(2), 1};
+
+    // when
+    M33 mSensorToSegment = getCalibrationMatrix(vNPose, vSPose);
+
+    // then
+    V3 vRandomInNPosePosePlane = {1.41, 0, 0};
+    V3 vRandomSegment = vRandomInNPosePosePlane * mSensorToSegment;
+    Real angleSquat = atan2(vRandomSegment[0], vRandomSegment[2]);
+
+    EXPECT_DOUBLE_EQ(angleSquat, M_PI_4);
+}
 
 GTEST_MAIN()

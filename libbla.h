@@ -55,6 +55,7 @@ Real getNormLp(V3 v, Real p);
 Real getNorm(V3 v);
 M33 getRotationMatrix(V3 v, axis keepIndex, axis reduceIndex);
 M33 getRotationMatrixReducingYAndX(V3 v);
+M33 getCalibrationMatrix(V3 vZ, V3 vXZ);
 
 #ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
 extern double epsilon;

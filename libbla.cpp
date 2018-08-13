@@ -147,3 +147,22 @@ M33 getRotationMatrixReducingYAndX(V3 v)
     return supersedeYKeepZRotation * supersedeXRotation;
 #endif
 }
+
+/** Returns calibration matrix
+ *
+ * @param vZ - first calibration vector V3
+ * @param vXZ - second calibration vector V3
+ * @return calibration matrix M33
+ *
+ * The calibration matrix is rotation matrix that:
+ * - for vZ - supersedes X and Y axis, assuming that result vZ * M has form [0,0,Z]
+ * - for vXZ - supersedes Y axis, assuming that result vXZ * M has form [X,0,Z]
+ */
+M33 getCalibrationMatrix(V3 vZ, V3 vXZ)
+{
+    M33 vZCalibrationMatrix = getRotationMatrixReducingYAndX(vZ);
+    V3 vXZSubCalibrated = vXZ * vZCalibrationMatrix;
+    M33 vXZCalibrationMatrix = getRotationMatrix(vXZSubCalibrated, Z, Y);
+
+    return vZCalibrationMatrix * vXZCalibrationMatrix;
+}
