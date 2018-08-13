@@ -3,8 +3,14 @@
 
 #include "libmath.h"
 
+constexpr const V3 ZERO3 = {0.0, 0.0, 0.0};
+constexpr const M33 ZERO33 = {ZERO3, ZERO3, ZERO3};
 
-double epsilon = 0.0000001;
+
+#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+
+double epsilon = 0.000000001;
+
 
 Real preventZero(Real x)
 {
@@ -30,10 +36,11 @@ M33 preventNan(M33 m)
     }
     return result;
 }
+#endif
 
 V3 operator*(V3 v, M33 m)
 {
-    V3 result;
+    V3 result = ZERO3;
     for (auto resultIndex : I3)
     {
         for (auto matrixIndex : I3)
@@ -41,13 +48,16 @@ V3 operator*(V3 v, M33 m)
             result[resultIndex] += v[matrixIndex] * m[resultIndex][matrixIndex];
         }
     }
+#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+    return preventNan(result);
+#else
     return result;
-    //preventNan(result);
+#endif
 }
 
 M33 operator*(M33 lhs, M33 rhs)
 {
-    M33 result;
+    M33 result = ZERO33;
     for (auto xIndex : I3)
     {
         for (auto yIndex : I3)
@@ -58,36 +68,41 @@ M33 operator*(M33 lhs, M33 rhs)
             }
         }
     }
+#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+    return preventNan(result);
+#else
     return result;
-    //preventNan(result);
+#endif
 }
 
 M33 getRotationMatrix(Real angle, axis index)
 {
     M33 result;
-    switch (index)
-    {
+    switch (index) {
         case 0:
             result = M33{
-                V3{1.0, 0.0, 0.0},
-                V3{0.0, cos(angle), -sin(angle)},
-                V3{0.0, sin(angle), cos(angle)}};
+                    V3{1.0, 0.0, 0.0},
+                    V3{0.0, cos(angle), -sin(angle)},
+                    V3{0.0, sin(angle), cos(angle)}};
             break;
         case 1:
             result = M33{
-                V3{cos(angle), 0.0, -sin(angle)},
-                V3{0.0, 1.0, 0.0},
-                V3{sin(angle), 0.0, cos(angle)}};
+                    V3{cos(angle), 0.0, -sin(angle)},
+                    V3{0.0, 1.0, 0.0},
+                    V3{sin(angle), 0.0, cos(angle)}};
             break;
         case 2:
             result = M33{
-                V3{cos(angle), -sin(angle), 0.0},
-                V3{sin(angle), cos(angle), 0.0},
-                V3{0.0, 0.0, 1.0}};
+                    V3{cos(angle), -sin(angle), 0.0},
+                    V3{sin(angle), cos(angle), 0.0},
+                    V3{0.0, 0.0, 1.0}};
             break;
     }
+#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+    return preventNan(result);
+#else
     return result;
-    //    return preventNan(result);
+#endif
 }
 
 Real getNormInf(V3 v)
@@ -118,9 +133,17 @@ M33 getRotationMatrix(V3 v, axis keepIndex, axis reduceIndex)
 
 M33 getRotationMatrixReducingYAndX(V3 v)
 {
+#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
     M33 supersedeYKeepZRotation = preventNan(getRotationMatrix(v, Z, Y));
     V3 supersedeYKeepZVector = preventNan(v * supersedeYKeepZRotation);
     M33 supersedeXRotation = preventNan(getRotationMatrix(supersedeYKeepZVector, Y, X));
-    V3 test = supersedeYKeepZVector * supersedeXRotation;
+    V3 test = preventNan(supersedeYKeepZVector * supersedeXRotation);
     return preventNan(supersedeYKeepZRotation * supersedeXRotation);
+#else
+    M33 supersedeYKeepZRotation = getRotationMatrix(v, Z, Y);
+    V3 supersedeYKeepZVector = v * supersedeYKeepZRotation;
+    M33 supersedeXRotation = getRotationMatrix(supersedeYKeepZVector, Y, X);
+    V3 test = supersedeYKeepZVector * supersedeXRotation;
+    return supersedeYKeepZRotation * supersedeXRotation;
+#endif
 }

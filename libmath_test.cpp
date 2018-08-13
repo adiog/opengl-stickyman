@@ -28,11 +28,11 @@ TEST(libmath, calibration)
     V3 vSPosePostNPoseRotation = vSPose * mNPoseRotation;
     M33 mCalibration = getRotationMatrix(vSPosePostNPoseRotation, Z, Y);
 
-    M33 mSensorToSegment = preventNan(mNPoseRotation * mCalibration);
+    M33 mSensorToSegment = mNPoseRotation * mCalibration;
 
     V3 vRandomInNPosePosePlane = {3, 4, 0};
 
-    V3 vRandomSegment = preventNan(vRandomInNPosePosePlane * mSensorToSegment);
+    V3 vRandomSegment = vRandomInNPosePosePlane * mSensorToSegment;
     Real angleSquat = atan2(vRandomSegment[0], vRandomSegment[2]);
 }
 

@@ -44,11 +44,9 @@ using M33T = V3T<V3T<T>>;
 
 using M33 = M33T<Real>;
 
-extern double epsilon;
+extern const V3 ZERO3;
+extern const M33 ZERO33;
 
-Real preventZero(Real x);
-V3 preventNan(V3 v);
-M33 preventNan(M33 m);
 V3 operator*(V3 v, M33 m);
 M33 operator*(M33 lhs, M33 rhs);
 M33 getRotationMatrix(Real angle, axis index);
@@ -58,3 +56,10 @@ Real getNorm(V3 v);
 M33 getRotationMatrix(V3 v, axis keepIndex, axis reduceIndex);
 M33 getRotationMatrixReducingYAndX(V3 v);
 
+#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+extern double epsilon;
+
+Real preventZero(Real x);
+V3 preventNan(V3 v);
+M33 preventNan(M33 m);
+#endif
