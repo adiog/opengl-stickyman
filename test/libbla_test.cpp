@@ -2,7 +2,7 @@
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
 #include "googletest"
-#include "libbla.h"
+#include "../source/math/LinearAlgebra.h"
 
 
 TEST(libmath, reduce111)
@@ -11,14 +11,14 @@ TEST(libmath, reduce111)
     V3 v = {1, 1, 1};
 
     // when
-    M33 mNPoseRotation = getRotationMatrixReducingYAndX(v);
+    M33 mNPoseRotation = math::getRotationMatrixReducingYAndX(v);
     V3 r = v * mNPoseRotation;
 
     // then
     EXPECT_DOUBLE_EQ(r[X], 0.0);
     //EXPECT_DOUBLE_EQ(r[Y], 0.0);
     EXPECT_NEAR(r[Y], 0.0, 0.000000000000001);
-    EXPECT_DOUBLE_EQ(r[Z], getNorm(v));
+    EXPECT_DOUBLE_EQ(r[Z], math::getNorm(v));
 }
 
 TEST(libmath, getCalibrationMatrixHuman)
@@ -28,7 +28,7 @@ TEST(libmath, getCalibrationMatrixHuman)
     V3 vSPose = {1, 0, 1};
 
     // when
-    M33 mSensorToSegment = getCalibrationMatrix(vNPose, vSPose);
+    M33 mSensorToSegment = math::getCalibrationMatrix(vNPose, vSPose);
 
     // then
     V3 vRandomInNPosePosePlane = {1.41, 0, 0};
@@ -45,7 +45,7 @@ TEST(libmath, getCalibrationMatrixRobot)
     V3 vSPose = {1/sqrt(2), 1/sqrt(2), 1};
 
     // when
-    M33 mSensorToSegment = getCalibrationMatrix(vNPose, vSPose);
+    M33 mSensorToSegment = math::getCalibrationMatrix(vNPose, vSPose);
 
     // then
     V3 vRandomInNPosePosePlane = {1.41, 0, 0};

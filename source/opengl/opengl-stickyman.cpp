@@ -1,7 +1,7 @@
 // This file is a part of opengl-stickyman project.
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-#include "drawFunction.h"
+#include "opengl/drawFunction.h"
 #include "globals.h"
 #include "opengl-stickyman.h"
 #include <initializer_list>
@@ -220,7 +220,7 @@ void myInit()
     }
 }
 
-int main(int argc, char** argv)
+int main_(int argc, char** argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);

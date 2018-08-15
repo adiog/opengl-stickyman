@@ -1,16 +1,11 @@
 // This file is a part of opengl-stickyman project.
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-#include "libbla.h"
-
-constexpr const V3 ZERO3 = {0.0, 0.0, 0.0};
-constexpr const M33 ZERO33 = {ZERO3, ZERO3, ZERO3};
+#include "LinearAlgebra.h"
 
 
-#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
-
+#ifdef DO_NOT_KNOW_HOW_TO_FLOAT
 double epsilon = 0.000000001;
-
 
 Real preventZero(Real x)
 {
@@ -38,6 +33,28 @@ M33 preventNan(M33 m)
 }
 #endif
 
+M33 operator*(Real s, M33 m)
+{
+    M33 result = ZERO33;
+    for (auto xIndex : I3)
+    {
+        for (auto yIndex : I3)
+        {
+            {
+                result[xIndex][yIndex] = s * m[xIndex][yIndex];
+            }
+        }
+    }
+    return result;
+}
+
+V3 operator*(Real s, V3 v)
+{
+    V3 result = ZERO3;
+    std::transform(v.cbegin(), v.cend(), result.begin(), [s](Real x) { return s * x; });
+    return result;
+}
+
 V3 operator*(V3 v, M33 m)
 {
     V3 result = ZERO3;
@@ -48,7 +65,7 @@ V3 operator*(V3 v, M33 m)
             result[resultIndex] += v[matrixIndex] * m[resultIndex][matrixIndex];
         }
     }
-#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+#ifdef DO_NOT_KNOW_HOW_TO_FLOAT
     return preventNan(result);
 #else
     return result;
@@ -68,37 +85,38 @@ M33 operator*(M33 lhs, M33 rhs)
             }
         }
     }
-#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+#ifdef DO_NOT_KNOW_HOW_TO_FLOAT
     return preventNan(result);
 #else
     return result;
 #endif
 }
-
+namespace math {
 M33 getRotationMatrix(Real angle, axis index)
 {
     M33 result;
-    switch (index) {
+    switch (index)
+    {
         case 0:
             result = M33{
-                    V3{1.0, 0.0, 0.0},
-                    V3{0.0, cos(angle), -sin(angle)},
-                    V3{0.0, sin(angle), cos(angle)}};
+                V3{1.0, 0.0, 0.0},
+                V3{0.0, cos(angle), -sin(angle)},
+                V3{0.0, sin(angle), cos(angle)}};
             break;
         case 1:
             result = M33{
-                    V3{cos(angle), 0.0, -sin(angle)},
-                    V3{0.0, 1.0, 0.0},
-                    V3{sin(angle), 0.0, cos(angle)}};
+                V3{cos(angle), 0.0, -sin(angle)},
+                V3{0.0, 1.0, 0.0},
+                V3{sin(angle), 0.0, cos(angle)}};
             break;
         case 2:
             result = M33{
-                    V3{cos(angle), -sin(angle), 0.0},
-                    V3{sin(angle), cos(angle), 0.0},
-                    V3{0.0, 0.0, 1.0}};
+                V3{cos(angle), -sin(angle), 0.0},
+                V3{sin(angle), cos(angle), 0.0},
+                V3{0.0, 0.0, 1.0}};
             break;
     }
-#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+#ifdef DO_NOT_KNOW_HOW_TO_FLOAT
     return preventNan(result);
 #else
     return result;
@@ -133,7 +151,7 @@ M33 getRotationMatrix(V3 v, axis keepIndex, axis reduceIndex)
 
 M33 getRotationMatrixReducingYAndX(V3 v)
 {
-#ifdef DONT_UNDERSTAND_FLOAT_ARITHMETICS
+#ifdef DO_NOT_KNOW_HOW_TO_FLOAT
     M33 supersedeYKeepZRotation = preventNan(getRotationMatrix(v, Z, Y));
     V3 supersedeYKeepZVector = preventNan(v * supersedeYKeepZRotation);
     M33 supersedeXRotation = preventNan(getRotationMatrix(supersedeYKeepZVector, Y, X));
@@ -148,16 +166,6 @@ M33 getRotationMatrixReducingYAndX(V3 v)
 #endif
 }
 
-/** Returns calibration matrix
- *
- * @param vZ - first calibration vector V3
- * @param vXZ - second calibration vector V3
- * @return calibration matrix M33
- *
- * The calibration matrix is rotation matrix that:
- * - for vZ - supersedes X and Y axis, assuming that result vZ * M has form [0,0,Z]
- * - for vXZ - supersedes Y axis, assuming that result vXZ * M has form [X,0,Z]
- */
 M33 getCalibrationMatrix(V3 vZ, V3 vXZ)
 {
     M33 vZCalibrationMatrix = getRotationMatrixReducingYAndX(vZ);
@@ -165,4 +173,5 @@ M33 getCalibrationMatrix(V3 vZ, V3 vXZ)
     M33 vXZCalibrationMatrix = getRotationMatrix(vXZSubCalibrated, Z, Y);
 
     return vZCalibrationMatrix * vXZCalibrationMatrix;
+}
 }
