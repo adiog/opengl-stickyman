@@ -17,7 +17,7 @@ namespace sensor {
 class Sensor
 {
 public:
-    Sensor(bio::Segment segment)
+    Sensor(bio::Segment segment = bio::Segment::Head)
             : segment(segment)
             , aFusion(std::make_unique<fusion::Kalman>())
     {
