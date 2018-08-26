@@ -125,7 +125,7 @@ M33 getRotationMatrix(Real angle, axis index)
 
 Real getNormInf(V3 v)
 {
-    return std::accumulate(v.cbegin(), v.cend(), 0.0);
+    return *std::max(v.cbegin(), v.cend());
 }
 
 Real getNormLp(V3 v, Real p)
@@ -144,7 +144,7 @@ M33 getRotationMatrix(V3 v, axis keepIndex, axis reduceIndex)
 {
     Real dir = (reduceIndex == Y) ? -1.0 : ((reduceIndex == Z) ? -1.0 : 1.0);
     Real x = v[reduceIndex];
-    Real y = getNormInf(v) - v[reduceIndex] - v[keepIndex];
+    Real y = std::accumulate(v.cbegin(), v.cend(), 0.0) - v[reduceIndex] - v[keepIndex];
     Real angle = dir * atan2(x, y);
     return getRotationMatrix(angle, keepIndex);
 }

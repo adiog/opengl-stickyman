@@ -7,10 +7,13 @@
 #include <network/Matcher.h>
 #include <network/Server.h>
 #include <opengl/RigidRenderer.h>
+#include <opengl/opengl-stickyman.h>
 
 
-int main()
+int main(int argc, char**argv)
 {
+    main_(argc, argv);
+
     model::VRSuit vrsuit(bio::Bio4{});
     opengl::RigidRenderer rigidRenderer;
     network::Server server;

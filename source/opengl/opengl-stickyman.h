@@ -4,6 +4,9 @@
 #include <string.h>
 #include <GL/glut.h>
 
+int main_(int argc, char** argv);
+
+
 /*
 Define of humanoid body properties 
 */

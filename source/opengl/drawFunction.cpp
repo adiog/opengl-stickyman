@@ -4,6 +4,7 @@
 #include "drawFunction.h"
 
 #include <GL/glut.h>
+#include <math/MathTypes.h>
 #include "globals.h"
 #include "opengl-stickyman.h"
 
@@ -17,3 +18,4 @@ void drawArrow(int axis)
     gluCylinder(sensorArrow[axis], 1.5, 0.0, 3.0, 10, 10);
     glPopMatrix();
 }
+

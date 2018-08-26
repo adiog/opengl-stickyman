@@ -1,9 +1,12 @@
 // This file is a part of opengl-stickyman project.
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-#include "opengl/drawFunction.h"
+#include "Bone.h"
+#include "Skeleton.h"
 #include "globals.h"
 #include "opengl-stickyman.h"
+#include "opengl/drawFunction.h"
+#include "Info.h"
 #include <initializer_list>
 void timer_walk(int);
 void timer_kick(int);
@@ -34,6 +37,11 @@ void rashapeSensor(int width, int height)
 
     gluPerspective(1.0, (float)width / height, 2.0, 1.0);
     gluLookAt(translation[3].value, translation[4].value, eye[2], at[0], at[1], at[2], up[0], up[1], up[2]);
+    /*
+    float eye[3] = {0, 0, 1};
+    float center[3] = {1, 0, 0};
+    float top[3] = {0, 1, 0};
+    gluLookAt(eye[X], eye[Y], eye[Z], center[X], center[Y], center[Z], top[X], top[Y], top[Z]);*/
     glTranslatef(translation[0].value, translation[1].value, translation[2].value);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
@@ -48,16 +56,47 @@ void redisplay_all(void)
     glutPostRedisplay();
 }
 
+Skeleton skeleton;
+void* font = GLUT_BITMAP_8_BY_13;
+float color[4] = {1, 1, 1, 1};
+const int TEXT_WIDTH = 8;
+const int TEXT_HEIGHT = 13;
 
 //--------------------------------Display function--------------------------------
 void displaySensor()
 {
-    glClearColor(1, 1, 0.5, 0.0);
+    glClearColor(0.4, 0.8, 0.4, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glColor3f(0.0, 0.0, 0.0);
     glColor3ub(0, 0, 0);
 
+    {
+        // backup current model-view matrix
+        glPushMatrix();                     // save current modelview matrix
+        glLoadIdentity();                   // reset modelview matrix
+
+        // set to 2D orthogonal projection
+        glMatrixMode(GL_PROJECTION);        // switch to projection matrix
+        glPushMatrix();                     // save current projection matrix
+        glLoadIdentity();                   // reset projection matrix
+        gluOrtho2D(0, 640, 0, 480);  // set to orthogonal projection
+
+
+        Info::drawString("Hello World", 350, 350, color, font);
+        // restore projection matrix
+        glPopMatrix();                   // restore to previous projection matrix
+
+        // restore modelview matrix
+        glMatrixMode(GL_MODELVIEW);      // switch to modelview matrix
+        glPopMatrix();                   // restore to previous modelview matrix
+    }
+    {
+        glPushMatrix();
+        skeleton.redraw();
+        glPopMatrix();
+    }
+    /*
     {
         glPushMatrix();
         glColor3f(1.0, 0.0, 0.0);
@@ -92,7 +131,7 @@ void displaySensor()
         drawArrow(2);
 
         glPopMatrix();
-    }
+    }*/
     glFlush();
     glutSwapBuffers();
 }
@@ -213,7 +252,8 @@ void myInit()
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    for(auto axis : {0,1,2}) {
+    for (auto axis : {0, 1, 2})
+    {
         sensorArrow[axis] = gluNewQuadric();
         gluQuadricTexture(sensorArrow[axis], GL_TRUE);
         gluQuadricDrawStyle(sensorArrow[axis], GLU_FILL);
