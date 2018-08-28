@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.0)
 project(opengl-stickyman CXX)
 set(CMAKE_CXX_STANDARD 17)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/abseil)
+
 include_directories(source)
+include_directories(deps/abseil)
 
 #add_executable(opengl-stickyman
 #        opengl-stickyman.cpp
@@ -17,7 +20,7 @@ include_directories(source)
 file(GLOB_RECURSE sources source/**.cpp)
 file(GLOB_RECURSE headers source/**.h)
 add_executable(vrsuit ${sources} ${headers})
-target_link_libraries(vrsuit GL glut GLU)
+target_link_libraries(vrsuit GL glut GLU absl_strings)
 
 
 add_executable(libbla_test test/libbla_test.cpp source/math/LinearAlgebra.cpp source/math/LinearAlgebra.h source/math/MathTypes.cpp)

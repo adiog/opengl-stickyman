@@ -11,8 +11,14 @@
 void timer_walk(int);
 void timer_kick(int);
 
+int gwidth;
+int gheight;
+
 void rashapeSensor(int width, int height)
 {
+    gwidth = width;
+    gheight = height;
+
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -57,10 +63,6 @@ void redisplay_all(void)
 }
 
 Skeleton skeleton;
-void* font = GLUT_BITMAP_8_BY_13;
-float color[4] = {1, 1, 1, 1};
-const int TEXT_WIDTH = 8;
-const int TEXT_HEIGHT = 13;
 
 //--------------------------------Display function--------------------------------
 void displaySensor()
@@ -72,24 +74,11 @@ void displaySensor()
     glColor3ub(0, 0, 0);
 
     {
-        // backup current model-view matrix
-        glPushMatrix();                     // save current modelview matrix
-        glLoadIdentity();                   // reset modelview matrix
-
-        // set to 2D orthogonal projection
-        glMatrixMode(GL_PROJECTION);        // switch to projection matrix
-        glPushMatrix();                     // save current projection matrix
-        glLoadIdentity();                   // reset projection matrix
-        gluOrtho2D(0, 640, 0, 480);  // set to orthogonal projection
-
-
-        Info::drawString("Hello World", 350, 350, color, font);
-        // restore projection matrix
-        glPopMatrix();                   // restore to previous projection matrix
-
-        // restore modelview matrix
-        glMatrixMode(GL_MODELVIEW);      // switch to modelview matrix
-        glPopMatrix();                   // restore to previous modelview matrix
+        Info info;
+        info << "Hello World";
+        info << '\n';
+        info << gwidth << " " << gheight << '\n';
+        info.flush();
     }
     {
         glPushMatrix();

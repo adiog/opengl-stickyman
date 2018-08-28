@@ -1,0 +1,88 @@
+// This file is a part of std-adiog project.
+// Copyright (c) 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
+
+#pragma once
+
+#include <iterator>
+
+
+namespace {
+template <typename Container, typename Iterator>
+struct SmartIterator : public Iterator {
+    SmartIterator(Container& container, Iterator&& iterator) : container(container), Iterator(std::forward<Iterator>(iterator)) {}
+    operator bool() { return *dynamic_cast<Iterator*>(this) != this->container.end(); }
+
+private:
+    Container& container;
+};
+
+template <typename Container, typename Iterator>
+struct SmartRIterator : public Iterator {
+    SmartRIterator(Container& container, Iterator&& iterator) : container(container), Iterator(std::forward<Iterator>(iterator)) {}
+    operator bool() { return *dynamic_cast<Iterator*>(this) != this->container.rend(); }
+
+private:
+    Container& container;
+};
+
+template <typename Container, typename Iterator>
+struct SmartCIterator : public Iterator {
+    SmartCIterator(const Container& container, Iterator&& iterator) : container(container), Iterator(std::forward<Iterator>(iterator)) {}
+    operator bool() { return *dynamic_cast<Iterator*>(this) != this->container.cend(); }
+
+private:
+    const Container& container;
+};
+
+template <typename Container, typename Iterator>
+struct SmartCRIterator : public Iterator {
+    SmartCRIterator(const Container& container, Iterator&& iterator) : container(container), Iterator(std::forward<Iterator>(iterator)) {}
+    operator bool() { return *dynamic_cast<Iterator*>(this) != this->container.crend(); }
+
+private:
+    const Container& container;
+};
+}
+
+namespace smart {
+template <typename Container>
+auto begin(Container& container) {
+    return SmartIterator<decltype(container), decltype(std::begin(container))>(container, std::begin(container));
+}
+
+template <typename Container>
+auto end(Container& container) {
+    return SmartIterator<decltype(container), decltype(std::end(container))>(container, std::end(container));
+}
+
+template <typename Container>
+auto rbegin(Container& container) {
+    return SmartRIterator<decltype(container), decltype(std::rbegin(container))>(container, std::rbegin(container));
+}
+
+template <typename Container>
+auto rend(Container& container) {
+    return SmartRIterator<decltype(container), decltype(std::rend(container))>(container, std::rend(container));
+}
+
+template <typename Container>
+auto cbegin(const Container& container) {
+    return SmartCIterator<decltype(container), decltype(std::cbegin(container))>(container, std::cbegin(container));
+}
+
+template <typename Container>
+auto cend(const Container& container) {
+    return SmartCIterator<decltype(container), decltype(std::cend(container))>(container, std::cend(container));
+}
+
+template <typename Container>
+auto crbegin(const Container& container) {
+    return SmartCRIterator<decltype(container), decltype(std::crbegin(container))>(container, std::crbegin(container));
+}
+
+template <typename Container>
+auto crend(const Container& container) {
+    return SmartCRIterator<decltype(container), decltype(std::crend(container))>(container, std::crend(container));
+}
+}
+
