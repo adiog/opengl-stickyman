@@ -1,18 +1,10 @@
 // This file is a part of VRSuit project.
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
-///////////////////////////////////////////////////////////////////////////////
-// write 2d text using GLUT
-// The projection matrix must be set to orthogonal before call this function.
-///////////////////////////////////////////////////////////////////////////////
-
 #include <sstream>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <absl/strings/str_split.h>
-
-const int TEXT_WIDTH = 8;
-const int TEXT_HEIGHT = 13;
 
 
 struct GLFlushContextPreserver
@@ -60,29 +52,9 @@ struct GLLineContextPreserver
     }
 };
 
-struct Info
+struct glOut
 {
-    template<typename T>
-    void drawString(const T& str, int row, int column)
-    {
-        GLLineContextPreserver contextPreserver;
-        void* font = GLUT_BITMAP_8_BY_13;
-        float color[4] = {1, 1, 1, 1};
-        const int xOffset = TEXT_HEIGHT;
-        const int yOffset = TEXT_HEIGHT;
-        int y = xOffset + row * TEXT_HEIGHT;
-        int x = yOffset + column * TEXT_WIDTH;
-        glColor4fv(color);    // set text color
-        glRasterPos2i(x, y);  // place text position
-
-        for(auto c : str)
-        {
-            glutBitmapCharacter(font, c);
-        }
-    }
-
-
-    Info()
+    glOut()
             : column(0)
             , row(0)
             , textBuffer{}
@@ -90,22 +62,9 @@ struct Info
         resetCaret();
     }
 
-    ~Info()
+    ~glOut()
     {
         flush();
-    }
-
-    void resetCaret()
-    {
-        column = 0;
-        row = 0;
-    }
-
-    template<typename T>
-    void drawLine(const T& line)
-    {
-        drawString(line, row, column);
-        row++;
     }
 
     void flush()
@@ -123,10 +82,45 @@ struct Info
     }
 
     template <typename T>
-    Info& operator<<(const T lineElement)
+    glOut& operator<<(const T lineElement)
     {
         textBuffer << lineElement;
         return *this;
+    }
+
+private:
+    void resetCaret()
+    {
+        column = 0;
+        row = 0;
+    }
+
+    template <typename T>
+    void drawLine(const T& line)
+    {
+        drawString(line, row, column);
+        row++;
+    }
+
+    template <typename T>
+    void drawString(const T& str, int row, int column)
+    {
+        GLLineContextPreserver contextPreserver;
+        void* font = GLUT_BITMAP_8_BY_13;
+        float color[4] = {1, 1, 1, 1};
+        const int TEXT_WIDTH = 8;
+        const int TEXT_HEIGHT = 13;
+        const int xOffset = TEXT_HEIGHT;
+        const int yOffset = TEXT_HEIGHT;
+        int y = xOffset + row * TEXT_HEIGHT;
+        int x = yOffset + column * TEXT_WIDTH;
+        glColor4fv(color);
+        glRasterPos2i(x, y);
+
+        for (auto c : str)
+        {
+            glutBitmapCharacter(font, c);
+        }
     }
 
 private:

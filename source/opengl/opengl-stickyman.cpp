@@ -6,7 +6,7 @@
 #include "globals.h"
 #include "opengl-stickyman.h"
 #include "opengl/drawFunction.h"
-#include "Info.h"
+#include "glOut.h"
 #include <initializer_list>
 void timer_walk(int);
 void timer_kick(int);
@@ -74,11 +74,11 @@ void displaySensor()
     glColor3ub(0, 0, 0);
 
     {
-        Info info;
-        info << "Hello World";
-        info << '\n';
-        info << gwidth << " " << gheight << '\n';
-        info.flush();
+        glOut out;
+        out << "Hello World";
+        out << '\n';
+        out << gwidth << " " << gheight << '\n';
+        out.flush();
     }
     {
         glPushMatrix();
