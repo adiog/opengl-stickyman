@@ -45,15 +45,15 @@ int main_opengl(int argc, char** argv, OnLoadCallback onLoadCallback)
 int main(int argc, char** argv)
 {
     model::Model sampleModel;
-    sampleModel.emplace(std::make_pair(model::Element::Sensor0, sensor::Sensor()));
+    sampleModel.emplace(std::make_pair(bio::Segment::Head, sensor::Sensor()));
 
     udpbox::Server server(1234);
     server.setOnDatagramCallback([&](udpbox::Datagram&& datagram) {
         std::string payload{datagram.payload.begin(), datagram.payload.end() - 1};
 
-        model::Element element = network::Matcher::match(datagram);
+        bio::Segment segment = network::Matcher::match(datagram);
         sensorFusion::SensorData sensorData = network::Dispatcher::dispatch(datagram);
-        sampleModel.at(element).update(sensorData);
+        sampleModel.at(segment).update(sensorData);
 
         /*        std::cout << "[" << datagram.sender << "]: ["
                   << data.accelerometer[X] << ", "

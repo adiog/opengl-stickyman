@@ -3,32 +3,31 @@
 
 #pragma once
 
-#include "Tracker.h"
 #include <component/Axis.h>
 #include <component/Floor.h>
-#include <opengl/ContextPreserver.h>
+#include <component/Skeleton.h>
 #include <model/Layout.h>
+#include <opengl/ContextPreserver.h>
 
 
 namespace component {
 struct Scene
 {
-    Scene() : tracker(model::Element::Sensor0, 1.0, 0.3) {}
-
     Floor floor;
-    Tracker tracker;
+    Skeleton skeleton;
+
     model::Layout layout;
 
     void apply(model::Layout&& newLayout)
     {
-        layout = std::forward<model::Layout>(newLayout);
+        layout = newLayout;
     }
 
     void render()
     {
         Axis::render();
         floor.render();
-        tracker.render(layout);
+        skeleton.render(layout);
     }
 };
 }

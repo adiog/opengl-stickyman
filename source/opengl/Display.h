@@ -109,7 +109,7 @@ struct Display
             out << "yaw pitch: " << (openGLContext.gyaw % 360) << "deg " << (openGLContext.gpitch % 360) << "deg\n";
             out << "cameraDistance: " << openGLContext.cameraDistance << '\n';
             out << "keyboard character: " << openGLContext.lastKey << " (" << (int)openGLContext.lastKey << ")\n";
-            for(const auto &arrow : openGLContext.scene.layout)
+            for(const auto &arrow : openGLContext.scene.layout.segmentLayout)
             {
                 out << arrow.second[0] << '\n';
             }
