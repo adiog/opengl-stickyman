@@ -1,4 +1,4 @@
-// This file is a part of VRSuit project.
+// This file is a part of opengl-stickyman project.
 // Copyright 2018 Aleksander Gajewski <adiog@brainfuck.pl>.
 
 #pragma once
@@ -7,7 +7,8 @@
 #include <math/MathTypes.h>
 
 #include <optional>
-#include <sensor/Data.h>
+#include <SensorData.h>
+#include <glm/detail/type_mat3x3.hpp>
 
 
 namespace sensor {
@@ -22,11 +23,11 @@ class Calibrator
 {
 public:
     Calibrator()
-            : calibrationMatrix(ID33)
+            : calibrationMatrix(glm::mat3{})
     {
     }
 
-    void calibrate(V3 referenceV3, CalibrationStep calibrationStep)
+    void calibrate(glm::vec3 referenceV3, CalibrationStep calibrationStep)
     {
         switch (calibrationStep)
         {
@@ -43,9 +44,9 @@ public:
         }
     }
 
-    Data transform(const Data &rawData)
+    sensorFusion::SensorData transform(const sensorFusion::SensorData &rawData)
     {
-        Data transformedData;
+        sensorFusion::SensorData transformedData;
         transformedData.accelerometer = rawData.accelerometer * calibrationMatrix;
         transformedData.gyroscope = rawData.gyroscope * calibrationMatrix;
         transformedData.magnetometer = rawData.magnetometer * calibrationMatrix;
@@ -53,8 +54,8 @@ public:
     }
 
 private:
-    std::optional<V3> referenceZCalibrationVector;
-    std::optional<V3> referenceXZCalibrationVector;
-    M33 calibrationMatrix;
+    std::optional<glm::vec3> referenceZCalibrationVector;
+    std::optional<glm::vec3> referenceXZCalibrationVector;
+    glm::mat3 calibrationMatrix;
 };
 }

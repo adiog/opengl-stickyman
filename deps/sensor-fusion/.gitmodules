@@ -1,0 +1,9 @@
+[submodule "variant/ahrs-mahony"]
+	path = variant/ahrs-mahony
+	url = https://github.com/adiog/embed-ahrs-mahony
+[submodule "variant/ahrs-madgwick"]
+	path = variant/ahrs-madgwick
+	url = https://github.com/adiog/embed-ahrs-madgwick
+[submodule "variant/imu-kalman"]
+	path = variant/imu-kalman
+	url = https://github.com/adiog/embed-imu-kalman

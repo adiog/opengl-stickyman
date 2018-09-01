@@ -3,25 +3,18 @@ project(opengl-stickyman CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/abseil)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/sensor-fusion)
 
 include_directories(source)
 include_directories(deps/abseil)
-
-#add_executable(opengl-stickyman
-#        opengl-stickyman.cpp
-#        opengl-stickyman.h
-#        drawFunction.cpp
-#        drawFunction.h
-#        globals.cpp
-#        globals.h
-#        )
-#target_link_libraries(opengl-stickyman GL glut GLU)
+include_directories(deps/udpbox/include)
+include_directories(deps/sensor-fusion/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sensor-fusion/variant/imu-kalman)
 
 file(GLOB_RECURSE sources source/**.cpp)
 file(GLOB_RECURSE headers source/**.h)
-add_executable(vrsuit ${sources} ${headers})
-target_link_libraries(vrsuit GL glut GLU absl_strings)
+add_executable(sensor ${sources} ${headers})
+target_link_libraries(sensor sensorFusion GL glut GLU absl_strings pthread)
 
-
-add_executable(libbla_test test/libbla_test.cpp source/math/LinearAlgebra.cpp source/math/LinearAlgebra.h source/math/MathTypes.cpp)
-target_link_libraries(libbla_test gtest pthread)
+add_executable(template_test test/template_test.cpp)
+target_link_libraries(template_test gtest pthread)
